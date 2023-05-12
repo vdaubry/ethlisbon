@@ -204,9 +204,24 @@ export default function SafePage() {
           <p>Safe integration</p>
           <p>Connected Address: {account}</p>
           <p>Chain: {chain?.name}</p>
-          <button onClick={() => sendMoneyToSafe()}>Transfer to Safe</button>
-          <button onClick={() => proposeAndRunTransaction()}>Send from Safe</button>
-          <button onClick={() => transferThroughGelato()}>Send Gelato</button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline my-2"
+            onClick={() => sendMoneyToSafe()}
+          >
+            Transfer to Safe
+          </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2 my-2"
+            onClick={() => proposeAndRunTransaction()}
+          >
+            Send from Safe
+          </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2 my-2"
+            onClick={() => transferThroughGelato()}
+          >
+            Send Gelato
+          </button>
         </div>
       </div>
     </ClientOnly>
