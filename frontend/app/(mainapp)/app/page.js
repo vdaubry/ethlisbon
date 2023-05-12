@@ -45,6 +45,7 @@ export default function App() {
 
   if (!hasMounted) return null;
   if (isError) return <div>Error fetching balance</div>;
+
   return (
     <ClientOnly>
       <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
