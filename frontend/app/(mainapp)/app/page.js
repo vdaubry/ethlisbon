@@ -45,6 +45,7 @@ export default function App() {
 
   if (!hasMounted) return null;
   if (isError) return <div>Error fetching balance</div>;
+
   return (
     <ClientOnly>
       <Web3Auth />
