@@ -14,7 +14,7 @@ export default function AppHeader() {
         </div>
 
         <div className="lg:flex lg:flex-1 lg:justify-end">
-          <ConnectKitButton />
+          {/* <ConnectKitButton /> */}
         </div>
       </nav>
     </header>

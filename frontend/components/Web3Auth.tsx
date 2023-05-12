@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   ADAPTER_EVENTS,
@@ -30,6 +31,7 @@ const Web3Auth = () => {
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
     null
   );
+  const [userAddress, setUserAddress] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -107,6 +109,7 @@ const Web3Auth = () => {
 
     setSafeAuthSignInResponse(response);
     setProvider(safeAuth.getProvider() as SafeEventEmitterProvider);
+    setUserAddress(response.eoa);
   };
 
   const logout = async () => {
@@ -116,6 +119,7 @@ const Web3Auth = () => {
 
     setProvider(null);
     setSafeAuthSignInResponse(null);
+    setUserAddress(null);
   };
 
   return (
@@ -128,6 +132,10 @@ const Web3Auth = () => {
                 Sign In With Web3Auth
               </h2>
             </div>
+            <div>
+              <p>Your EOA address: </p>
+              <p>{userAddress}</p>
+            </div>
             <div className="flex items-center justify-between">
               <button
                 type="submit"
@@ -139,8 +147,32 @@ const Web3Auth = () => {
               >
                 Sign In
               </button>
+              {userAddress && (
+                <button
+                  type="submit"
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  disabled={!logout}
+                  onClick={() => {
+                    logout?.();
+                  }}
+                >
+                  Sign Out
+                </button>
+              )}
             </div>
           </div>
+          {userAddress && (
+            <div className="flex items-center justify-between mt-5">
+              <Link href={`/wallets/${userAddress}/onramp`}>
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Fund your wallet
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </>

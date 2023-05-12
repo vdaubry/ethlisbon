@@ -809,6 +809,11 @@
     semver "^7.3.8"
     superstruct "^1.0.3"
 
+"@monerium/sdk@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@monerium/sdk/-/sdk-2.4.1.tgz#12676015310cbcd14d7a5791b8542e7638b7a77e"
+  integrity sha512-Ez6PT1mK3zdPjcyq0lzZqFvGQ6QIsw/P/6B5vMiw/+p1mm79z9CwmjhZIXl+dyPwEEpfhWJEnz5nn7hH869rsA==
+
 "@motionone/animation@^10.12.0", "@motionone/animation@^10.15.1":
   version "10.15.1"
   resolved "https://registry.yarnpkg.com/@motionone/animation/-/animation-10.15.1.tgz#4a85596c31cbc5100ae8eb8b34c459fb0ccf6807"
@@ -1036,7 +1041,17 @@
     "@walletconnect/client" "^1.8.0"
     ethers "^5.7.2"
 
-"@safe-global/protocol-kit@^1.0.0":
+"@safe-global/onramp-kit@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@safe-global/onramp-kit/-/onramp-kit-1.1.0.tgz#6f76acc15e9dcb502cb7a87333a6f9bb6c9b9166"
+  integrity sha512-QuxmzMtW3qiZ5oxsAPoPzP0cOcSGufEzYnA5h3xlRlVTwmfmN2Rqju47XcO8RvCQxq5hIjrnbLVHfzxUDRygjw==
+  dependencies:
+    "@safe-global/api-kit" "^1.1.0"
+    "@safe-global/protocol-kit" "^1.0.1"
+    "@safe-global/safe-core-sdk-types" "^2.0.0"
+    ethers "^5.7.0"
+
+"@safe-global/protocol-kit@^1.0.0", "@safe-global/protocol-kit@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@safe-global/protocol-kit/-/protocol-kit-1.0.1.tgz#05c00436a75bebedb2cc35efc461c9aa909f8f89"
   integrity sha512-ZLfFxV6U9f5bJKcCQmrDJq/FzDGz7FMpXOjJ+G90VkaqBme3En73sN1KGd7++VKS7H3ukyM/xetrJs2mtvHlZg==
@@ -1323,6 +1338,16 @@
     "@stablelib/keyagreement" "^1.0.1"
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
+
+"@stripe/crypto@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@stripe/crypto/-/crypto-0.0.4.tgz#51dbcb3750c75a6b8a6c8775381af82367359146"
+  integrity sha512-gcD/aG0N90ZrNVppWYf9ADPECptw6PVtF67VIeaFP7fhgd2NvNx8erkzlcvk3VIVSY+bZ6YGX7c7cASoySX74Q==
+
+"@stripe/stripe-js@^1.52.1":
+  version "1.52.1"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.52.1.tgz#d821bcd627a34227c20fe87d7c8f8bd4386eaf2e"
+  integrity sha512-fza40OPSpGQlFxc5TZWiYC/6Lk89Sep1fLuv9ss33YS6lCAF8UZbfA1E6W+lwO4c7WRKZIZumHIEbPJfP/O9uw==
 
 "@swc/helpers@0.5.1":
   version "0.5.1"
@@ -4111,7 +4136,7 @@ ethereumjs-util@^7.1.0, ethereumjs-util@^7.1.1, ethereumjs-util@^7.1.2, ethereum
     ethereum-cryptography "^0.1.3"
     rlp "^2.2.4"
 
-ethers@^5.7.2:
+ethers@^5.7.0, ethers@^5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
