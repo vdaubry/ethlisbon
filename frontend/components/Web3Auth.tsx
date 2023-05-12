@@ -2,19 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import {
-  ADAPTER_EVENTS,
-  CHAIN_NAMESPACES,
-  SafeEventEmitterProvider,
-  WALLET_ADAPTERS,
-} from "@web3auth/base";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { Web3AuthOptions } from "@web3auth/modal";
-import { EthHashInfo } from "@safe-global/safe-react-components";
-
+import { ADAPTER_EVENTS, SafeEventEmitterProvider } from "@web3auth/base";
 import { GelatoRelayPack } from "@safe-global/relay-kit";
 import { ethers } from "ethers";
-import Safe, { EthersAdapter, getSafeContract, SafeFactory } from "@safe-global/protocol-kit";
+import Safe, {
+  EthersAdapter,
+  getSafeContract,
+  SafeFactory,
+} from "@safe-global/protocol-kit";
 import {
   SafeAuthKit,
   SafeAuthSignInData,
@@ -22,6 +17,7 @@ import {
   Web3AuthEventListener,
 } from "@/utils/safe-core/index";
 import { OperationType } from "@safe-global/safe-core-sdk-types";
+import getSafeAuth from "@/utils/safeAuth";
 
 const connectedHandler: Web3AuthEventListener = (data) =>
   console.log("CONNECTED", data);
@@ -39,55 +35,7 @@ const Web3Auth = () => {
 
   useEffect(() => {
     (async () => {
-      const options: Web3AuthOptions = {
-        clientId:
-          "BNcj0sLcTDZbJROfleFr6YPIcfIX6-Z2ZPFiIkl3Pvqtavkxhcn4hK5nrY_MWcovRQdvwCWhj6s_ufi8TbC34oU",
-        web3AuthNetwork: "testnet",
-        chainConfig: {
-          chainNamespace: CHAIN_NAMESPACES.EIP155,
-          chainId: "0x5",
-          rpcTarget:
-            "https://goerli.infura.io/v3/c01468162cae4441ba6c94ac3ece1cc7",
-        },
-        uiConfig: {
-          theme: "dark",
-          loginMethodsOrder: ["google", "facebook"],
-        },
-      };
-
-      const modalConfig = {
-        [WALLET_ADAPTERS.TORUS_EVM]: {
-          label: "torus",
-          showOnModal: false,
-        },
-        [WALLET_ADAPTERS.METAMASK]: {
-          label: "metamask",
-          showOnDesktop: true,
-          showOnMobile: false,
-        },
-      };
-
-      const openloginAdapter = new OpenloginAdapter({
-        loginSettings: {
-          mfaLevel: "mandatory",
-        },
-        adapterSettings: {
-          uxMode: "popup",
-          whiteLabel: {
-            name: "Safe",
-          },
-        },
-      });
-
-      const adapter = new Web3AuthModalPack(
-        options,
-        [openloginAdapter],
-        modalConfig
-      );
-
-      const safeAuthKit = await SafeAuthKit.init(adapter, {
-        txServiceUrl: "https://safe-transaction-goerli.safe.global",
-      });
+      const safeAuthKit = await getSafeAuth();
 
       safeAuthKit.subscribe(ADAPTER_EVENTS.CONNECTED, connectedHandler);
 
@@ -122,15 +70,15 @@ const Web3Auth = () => {
 
     const ethAdapter = new EthersAdapter({
       ethers,
-      signerOrProvider: signer || provider
-    })
+      signerOrProvider: signer || provider,
+    });
 
     const safeFactory = await SafeFactory.create({ ethAdapter: ethAdapter });
     console.log("Safe created");
 
     const safeAccountConfig = {
       owners: [await signer.getAddress()],
-      threshold: 1
+      threshold: 1,
     };
 
     const safeSdkOwner1 = await safeFactory.deploySafe({ safeAccountConfig });
@@ -147,14 +95,14 @@ const Web3Auth = () => {
 
     const ethAdapter = new EthersAdapter({
       ethers,
-      signerOrProvider: signer || provider
-    })
+      signerOrProvider: signer || provider,
+    });
 
     const safeAddress = "0x8A1385140F9d31B34c6659063BAf7bc5238db2e9";
 
     const safeSDK = await Safe.create({
       ethAdapter: ethAdapter,
-      safeAddress
+      safeAddress,
     });
 
     const destinationAddress = "0x33041027dd8F4dC82B6e825FB37ADf8f15d44053";
@@ -165,21 +113,25 @@ const Web3Auth = () => {
       to: destinationAddress,
       data: "0x", // leave blank for native token transfers
       value: withdrawAmount,
-      operation: OperationType.Call
+      operation: OperationType.Call,
     };
 
     const options = {
       gasLimit,
-      isSponsored: true
+      isSponsored: true,
     };
 
     console.log("DATA Prepared");
 
-    const relayKit = new GelatoRelayPack("JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_");
+    const relayKit = new GelatoRelayPack(
+      "JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_"
+    );
 
     console.log("Gelato initialized");
 
-    const safeTransaction = await safeSDK.createTransaction({ safeTransactionData });
+    const safeTransaction = await safeSDK.createTransaction({
+      safeTransactionData,
+    });
 
     console.log("transaction initialized");
 
@@ -189,7 +141,7 @@ const Web3Auth = () => {
 
     const safeSingletonContract = await getSafeContract({
       ethAdapter: ethAdapter,
-      safeVersion: await safeSDK.getContractVersion()
+      safeVersion: await safeSDK.getContractVersion(),
     });
 
     console.log("safe contract fetched");
@@ -204,7 +156,7 @@ const Web3Auth = () => {
       signedSafeTx.data.gasPrice,
       signedSafeTx.data.gasToken,
       signedSafeTx.data.refundReceiver,
-      signedSafeTx.encodedSignatures()
+      signedSafeTx.encodedSignatures(),
     ]);
 
     console.log("tx encoded");
@@ -213,14 +165,16 @@ const Web3Auth = () => {
       target: safeAddress,
       encodedTransaction: encodedTx,
       chainId: 5, // GOERLI
-      options
+      options,
     };
 
     console.log("relay sent");
     const response = await relayKit.relayTransaction(relayTransaction);
 
-    console.log(`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`);
-  }
+    console.log(
+      `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
+    );
+  };
 
   const logout = async () => {
     if (!safeAuth) return;
