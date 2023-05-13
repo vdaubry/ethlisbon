@@ -67,27 +67,31 @@ export default function Home() {
   const connectButton = () => {
     if (loading.web3) {
       return (
-        <Button disabled>
+        <Button disabled className="w-full">
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Please wait
         </Button>
       );
     } else {
-      return <Button onClick={() => web3Login()}>Connect Wallet</Button>;
+      return (
+        <Button className="w-full" onClick={() => web3Login()}>
+          Connect Wallet
+        </Button>
+      );
     }
   };
 
   const loginButton = () => {
     if (loading.web2) {
       return (
-        <Button variant="secondary" disabled className="my-6">
+        <Button variant="secondary" disabled className="w-full">
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Please wait
         </Button>
       );
     } else {
       return (
-        <Button variant="secondary" onClick={() => socialLogin()}>
+        <Button variant="secondary" className="w-full" onClick={() => socialLogin()}>
           Social Login
         </Button>
       );

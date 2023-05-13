@@ -18,8 +18,10 @@ import { GelatoRelay } from "@gelatonetwork/relay-sdk";
 import { SafeOnRampKit, StripePack } from "@safe-global/onramp-kit";
 
 import ERC20ABI from "./abi/ERC20.json";
+import PayABI from "./abi/Pay.json";
 
 const USDC_ADDRESS_GOERLI = "0x07865c6e87b9f70255377e024ace6630c1eaa37f";
+const PAY_CONTRACT_ADDRESS = "0x5D05EAE2057Dc6cC36E3f79dA98365dEfD9489D5";
 const CHAIN_ID = 5;
 const STABLE_DECIMALS = 6;
 
@@ -37,6 +39,13 @@ export default function Home() {
 
   // Web3 TX details
   const contract = useContract({
+    address: PAY_CONTRACT_ADDRESS,
+    abi: PayABI,
+    chainId: CHAIN_ID,
+    signerOrProvider: signer
+  });
+
+  const usdcContract = useContract({
     address: USDC_ADDRESS_GOERLI,
     abi: ERC20ABI,
     chainId: CHAIN_ID,
@@ -101,28 +110,34 @@ export default function Home() {
     const localAmount = `${amountInCents.slice(0, -2)}.${amountInCents.slice(-2)}`;
     const amount = ethers.utils.parseUnits(localAmount, STABLE_DECIMALS);
 
-    await contract.connect(signer).transfer(targetUser, amount);
+    // await contract.connect(signer).approve(PAY_CONTRACT_ADDRESS, amount);
 
-    // const { data } = await contract.connect(signer).populateTransaction.transfer(targetUser, amount);
+    const allowance = await usdcContract.connect(signer).allowance(address, PAY_CONTRACT_ADDRESS);
 
-    // console.log("TX Populated");
+    // our smart contract has allowance to do things gasless
+    if (allowance > amount) {
+      const { data } = await contract.connect(signer).populateTransaction.transfer(address, targetUser, amount);
 
-    // const request = {
-    //   chainId: CHAIN_ID,
-    //   target: USDC_ADDRESS_GOERLI,
-    //   data: data,
-    //   gasLimit: "100000",
-    //   isSponsored: true,
-    //   user: await signer.getAddress()
-    // };
+      const request = {
+        chainId: CHAIN_ID,
+        target: PAY_CONTRACT_ADDRESS,
+        data: data,
+        gasLimit: "100000",
+        isSponsored: true,
+        user: await signer.getAddress()
+      };
 
-    // const relayKit = new GelatoRelay();
+      const relayKit = new GelatoRelay();
 
-    // console.log("Gelato initialized - sending sponsored call");
+      console.log("Gelato initialized - sending sponsored call");
 
-    // const response = await relayKit.sponsoredCall(request, "JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_");
+      const response = await relayKit.sponsoredCall(request, "JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_");
 
-    // console.log(`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`);
+      console.log(`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`);
+    } else {
+      // if it doesn't we do the web3 way with a regular transfer
+      await usdcContract.connect(signer).transfer(targetUser, amount);
+    }
   };
 
   const connectButton = () => {
