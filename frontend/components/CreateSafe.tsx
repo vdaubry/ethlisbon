@@ -162,10 +162,16 @@ const CreateSafe = () => {
 			<main className="flex flex-col items-center justify-center text-center">
 				<div className="flex items-center justify-center text-center mt-3">
 					<GenericCard
+						className={""}
 						title={"Create Safe to receive funds"}
+						subtitle={""}
 						footerText={"Create Safe"}
 						footerClick={() => createSafe()}
-					></GenericCard>
+					>
+						<div>
+							<p>Foo</p>
+						</div>
+					</GenericCard>
 				</div>
 			</main>
 		</div>
