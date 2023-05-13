@@ -30,6 +30,8 @@ import { GenericCard } from "@/components/GenericCard";
 import { useNetwork, useAccount, useContract, useSigner } from "wagmi";
 import { contractAddresses, contractAbi } from "@/constants/index";
 import { GelatoRelay } from "@gelatonetwork/relay-sdk";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 const CreateSafe = () => {
 	const [safeAuthSignInResponse, setSafeAuthSignInResponse] =
@@ -40,6 +42,10 @@ const CreateSafe = () => {
 
 	const { chain } = useNetwork();
 	const { address: account } = useAccount();
+
+	// localState for Name + Phone number
+	const [name, setName] = useState("");
+	const [phoneNumber, setPhoneNumber] = useState("");
 
 	const safeVersion: SafeVersion = "1.3.0";
 
@@ -208,18 +214,34 @@ const CreateSafe = () => {
 	};
 
 	return (
-		<div className="flex flex-col items-center justify-center py-2">
-			<main className="flex flex-col items-center justify-center text-center">
-				<h1 className="text-6xl font-bold mb-6">SLICE</h1>
-				<div className="flex items-center justify-center text-center mt-3">
+    <div className="flex flex-col items-center min-h-screen py-6 ">
+      <main className="flex flex-col items-center flex-1 px-20 text-center">
+        <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo" />
+				<div className="flex items-center justify-center text-left mt-3">
 					<GenericCard
 						className={""}
-						title={"Create Safe to receive funds"}
-						subtitle={""}
-						footerText={"Create Safe"}
+						title={"Set up your account"}
+						subtitle={"During the registration we'll create a safe for you to safely receive your funds"}
+						footerText={"Register"}
 						footerClick={() => createSafe()}
 					>
-						<div></div>
+						<Label htmlFor="name-input" className="text-left">Name</Label>
+						<Input
+              type="text"
+              placeholder="John Doe"
+							id="name-input"
+              value={name}
+              onChange={e => setName(e.target.value)}
+            />
+						<Label htmlFor="phone-input" className="text-left">Phone Number</Label>
+						<Input
+              type="tel"
+							id="phone-input"
+              placeholder="+1 555 555 5555"
+              value={phoneNumber}
+              onChange={e => setPhoneNumber(e.target.value)}
+            />
+						<p className="text-sm text-muted-foreground text-left">Make sure to include your country code.</p>
 					</GenericCard>
 				</div>
 			</main>
