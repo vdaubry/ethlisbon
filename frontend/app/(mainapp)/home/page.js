@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount, useConnect, useEnsName } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
@@ -19,6 +19,7 @@ export default function Home() {
   const { connect } = useConnect({
     connector: new InjectedConnector()
   });
+  const router = useRouter();
   const [loading, setLoading] = useState({
     web3: false,
     web2: false
@@ -43,7 +44,7 @@ export default function Home() {
 
   useEffect(() => {
     if (address) {
-      redirect("/home/split");
+      router.push("/home/split");
     }
   }, [address, isConnected]);
 
@@ -53,7 +54,7 @@ export default function Home() {
 
     const response = await safeAuth.signIn();
     if (response.eoa) {
-      redirect("/home/split");
+      router.push("/home/split");
     }
   };
 
