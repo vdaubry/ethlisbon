@@ -16,7 +16,6 @@ export default function AppLayout({ children }) {
       <body className={inter.className}>
         <WagmiConfig client={client}>
           <ConnectKitProvider>
-            <AppHeader />
             {children}
           </ConnectKitProvider>
         </WagmiConfig>
