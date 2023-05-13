@@ -56,5 +56,8 @@
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "typescript": "5.0.4"
+  },
+  "resolutions": {
+    "@walletconnect/ethereum-provider": "2.7.0"
   }
 }
