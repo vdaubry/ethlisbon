@@ -57,8 +57,9 @@ export default function SplitBill() {
   if (!hasMounted) return null;
   return (
     <ClientOnly>
-      <main className="py-2">
-        <div className="flex items-center justify-center text-center">
+      <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        <main className="flex flex-col items-center justify-center px-20 text-center">
+          <h1 className="text-6xl font-bold mb-6">SLICE</h1>
           <Card className="w-[380px]">
             <CardHeader>
               <CardTitle>Describe your bill</CardTitle>
@@ -81,7 +82,7 @@ export default function SplitBill() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </main>
 
         <div className="flex items-center justify-center text-center mt-3">
           <GenericCard
@@ -104,7 +105,7 @@ export default function SplitBill() {
             </div>
           </GenericCard>
         </div>
-      </main>
+      </div>
     </ClientOnly>
   );
 }

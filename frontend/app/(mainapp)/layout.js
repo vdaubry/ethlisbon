@@ -17,10 +17,7 @@ export default function AppLayout({ children }) {
       <body className={inter.className}>
         <WagmiConfig client={client}>
           <ConnectKitProvider>
-            <CheckedContactsProvider>
-              <AppHeader />
-              {children}
-            </CheckedContactsProvider>
+            <CheckedContactsProvider>{children}</CheckedContactsProvider>
           </ConnectKitProvider>
         </WagmiConfig>
       </body>

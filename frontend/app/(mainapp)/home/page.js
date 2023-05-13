@@ -9,6 +9,7 @@ import getSafeAuth from "@/utils/safeAuth";
 
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { GenericCard } from "@/components/GenericCard";
 
 const connectedHandler = data => console.log("CONNECTED", data);
 const disconnectedHandler = data => console.log("DISCONNECTED", data);
@@ -94,11 +95,16 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-2">
-      <main className="flex flex-col items-center justify-center">
-        {connectButton()}
-        <p className="mt-6 mb-3 text-lg">{"Don't have a wallet? No problem!"}</p>
-        {loginButton()}
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+      <main className="flex flex-col items-center justify-center flex-1 px-20 text-center">
+        <h1 className="text-6xl font-bold mb-6">SLICE</h1>
+        <GenericCard title={"Pay, get paid and split bills in crypto using just a phone number."}>
+          <div className="flex flex-col w-full max-w-sm items-center">
+            {connectButton()}
+            <p className="mt-6 mb-3 text-sm text-muted-foreground">{"Don't have a wallet? No problem!"}</p>
+            {loginButton()}
+          </div>
+        </GenericCard>
       </main>
     </div>
   );
