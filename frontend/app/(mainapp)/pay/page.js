@@ -63,9 +63,7 @@ export default function Pay() {
   const [targetUser, setTargetUser] = useState(null);
   const [amountInCents, setAmountInCents] = useState(null);
   const [paymentInProgress, setPaymentInProgress] = useState(false);
-  const [relayKitUrl, setRelayKitUrl] = useState(
-    "https://relay.gelato.digital/tasks/status/0x8fe1d059bbf05e53a58569c838f51d997fea52e6954110b5f7eed63c93dd3682"
-  );
+  const [relayKitUrl, setRelayKitUrl] = useState(null);
   const [web3Success, setWeb3Success] = useState(false);
 
   const { data: ensName } = useEnsName({ address: targetUser, chainId: 1 });
