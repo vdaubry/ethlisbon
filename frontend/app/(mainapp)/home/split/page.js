@@ -38,7 +38,7 @@ export default function Split() {
       const safeAuthKit = await getSafeAuth();
       setSafeAuth(safeAuthKit);
 
-      const response = await safeAuth.signIn();
+      const response = await safeAuthKit.signIn();
       setUserAddress(response.eoa);
     })();
   }, []);
