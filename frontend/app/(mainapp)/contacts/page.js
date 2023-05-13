@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { GenericCard } from "@/components/GenericCard";
 import { Switch } from "@/components/ui/switch";
 
-import { useCheckedContacts } from "@/contexts/CheckedContactsContext";
+import { useGenericContext } from "@/contexts/GenericContext";
 
 const ContactList = [
   { name: "John Doe", phone: "555-555-5555" },
@@ -38,7 +38,7 @@ export default function Split() {
   const [searchQuery, setSearchQuery] = useState(null);
 
   // Shared state
-  const { checkedContacts, setCheckedContacts } = useCheckedContacts([]);
+  const { checkedContacts, setCheckedContacts } = useGenericContext([]);
 
   useEffect(() => {
     (async () => {
