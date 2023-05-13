@@ -135,14 +135,14 @@ export default function Home() {
       );
     } else if (address) {
       return (
-        <Button className="my-6 w-full" onClick={() => settleSplitWeb3()}>
+        <Button className="my-4 w-full" onClick={() => settleSplitWeb3()}>
           Settle {parseAmount()}
         </Button>
       );
     } else {
       return (
-        <Button className="my-6 w-full" onClick={() => web3Login()}>
-          Connect Wallet
+        <Button className="my-4 w-full" onClick={() => web3Login()}>
+          Pay with crypto
         </Button>
       );
     }
@@ -151,15 +151,15 @@ export default function Home() {
   const stripeButton = () => {
     if (loading.web2) {
       return (
-        <Button disabled className="my-6 w-full" variant="secondary">
+        <Button disabled className="w-full" variant="secondary">
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Please wait
         </Button>
       );
     } else {
       return (
-        <Button className="my-6 w-full" variant="outline" onClick={() => stripeFlow()}>
-          I don&apos;t have crypto
+        <Button className="w-full" variant="outline" onClick={() => stripeFlow()}>
+          Pay with credit card
         </Button>
       );
     }
@@ -212,14 +212,12 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <main className="flex flex-col items-center justify-center flex-1 px-20 text-center">
         <h1 className="text-6xl font-bold mb-6">SLICE</h1>
-        <GenericCard title={"Split"} subtitle={`${prettyfyUserAddress()} wants to split with you!`}>
+        <GenericCard title={`${prettyfyUserAddress()} is asking for a slice 🍰`}>
           <div className="flex flex-col w-full max-w-sm items-center">
             <p className="text-xl bold mb-5">Amount: {parseAmount()}</p>
             <Separator className="mb-5" />
-            <p className="text-sm text-gray-500">Want to settle the split with crypto?</p>
+            <p className="text-sm text-gray-500">How do you want to settle the split?</p>
             {connectButton()}
-            <Separator className="mb-5" />
-            <p className="text-sm text-gray-500">Don&apos;t have crypto? Use your Credit Card.</p>
             <Popover modal={true}>
               <PopoverTrigger asChild>{stripeButton()}</PopoverTrigger>
               <PopoverContent className="border-0 bg-transparent shadow-none w-96">
