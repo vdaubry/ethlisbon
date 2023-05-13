@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount, useConnect, useContractRead } from "wagmi";
+import { useAccount, useConnect, useContract, useSigner } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { ADAPTER_EVENTS } from "@web3auth/base";
 import getSafeAuth from "@/utils/safeAuth";
@@ -33,11 +33,13 @@ export default function Home() {
   const CHAIN_ID = 5;
   const contractAddress = contractAddresses[CHAIN_ID]["contract"];
 
-  const { data: readSafeAddressFromContract } = useContractRead({
+  const { data: signer } = useSigner();
+
+  const contract = useContract({
     address: contractAddress,
     abi: contractAbi,
-    functionName: "getSafe",
-    args: []
+    chainId: CHAIN_ID,
+    signerOrProvider: signer
   });
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export default function Home() {
   const performRedirect = async () => {
     console.log("EOA address", eoaAddress);
 
-    const safeAddress = await readSafeAddressFromContract();
+    const safeAddress = await contract.connect(signer).getSafe();
     if (safeAddress) {
       router.push("/contracts");
     } else {
