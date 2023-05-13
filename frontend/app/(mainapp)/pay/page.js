@@ -159,7 +159,7 @@ export default function Home() {
     } else {
       return (
         <Button className="my-6 w-full" variant="outline" onClick={() => stripeFlow()}>
-          I don't have crypto
+          I don&apos;t have crypto
         </Button>
       );
     }
@@ -219,7 +219,7 @@ export default function Home() {
             <p className="text-sm text-gray-500">Want to settle the split with crypto?</p>
             {connectButton()}
             <Separator className="mb-5" />
-            <p className="text-sm text-gray-500">Don't have crypto? Use your Credit Card.</p>
+            <p className="text-sm text-gray-500">Don&apos;t have crypto? Use your Credit Card.</p>
             <Popover modal={true}>
               <PopoverTrigger asChild>{stripeButton()}</PopoverTrigger>
               <PopoverContent className="border-0 bg-transparent shadow-none w-96">
