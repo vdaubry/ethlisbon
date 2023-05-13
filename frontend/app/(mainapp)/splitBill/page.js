@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { GenericCard } from "@/components/GenericCard";
+import UserSplitAmountCard from "@/components/UserSplitAmountCard";
 import { User } from "lucide-react";
 
 export default function SplitBill() {
@@ -34,7 +35,7 @@ export default function SplitBill() {
   };
 
   const getSplittedAmount = () => {
-    return (totalAmount / (checkedContacts.length + 1)).toFixed(2);
+    return totalAmount / (checkedContacts.length + 1);
   };
 
   if (!hasMounted) return null;
@@ -74,21 +75,9 @@ export default function SplitBill() {
             footerClick={() => onGenerateSharinLinks()}
           >
             <div>
+              <UserSplitAmountCard contactName="Myself" amount={getSplittedAmount()} />
               {checkedContacts.map((contactName, index) => (
-                <div key={index} className="mb-4 flex justify-between items-center pb-4 last:mb-0 last:pb-0">
-                  <User />
-                  <div className="space-y-1">
-                    <p contact="text-sm font-medium leading-none">{contactName}</p>
-                  </div>
-
-                  <Input
-                    value={getSplittedAmount() + " $"}
-                    className="w-24"
-                    type="email"
-                    placeholder="Amount"
-                    onChange={e => console.log(e.target.value)}
-                  />
-                </div>
+                <UserSplitAmountCard key={index} contactName={contactName} amount={getSplittedAmount()} />
               ))}
             </div>
           </GenericCard>
