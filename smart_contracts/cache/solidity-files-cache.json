@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/vincentdaubry/Documents/Projects/EthLisbon/smart_contracts/contracts/Slice.sol": {
-      "lastModificationDate": 1684011949219,
-      "contentHash": "b81684894ab1254056e773f2f429ff39",
+      "lastModificationDate": 1684013820227,
+      "contentHash": "2cd105014a410e28eff650c150645465",
       "sourceName": "contracts/Slice.sol",
       "solcConfig": {
         "version": "0.8.19",
