@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ClientOnly from "@/components/clientOnly";
-import { useCheckedContacts } from "@/contexts/GenericContext";
+import { useGenericContext } from "@/contexts/GenericContext";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,8 @@ import { User } from "lucide-react";
 
 export default function SplitBill() {
   const [hasMounted, setHasMounted] = useState(false);
-  const { checkedContacts, setCheckedContacts } = useCheckedContacts([]);
+  const { checkedContacts, setCheckedContacts } = useGenericContext([]);
+  const { safeAddress, setSafeAddress } = useGenericContext("");
   const [totalAmount, setTotalAmount] = useState(30);
   const [sharingLinks, setSharingLinks] = useState(false);
 
@@ -42,12 +43,13 @@ export default function SplitBill() {
   const getShareLink = () => {
     const isProd = process.env.VERCEL_ENV === "production";
 
-    let url = "http://localhost:3000/pay";
+    const params = "?safeAddress=" + safeAddress + "&amount=" + getSplittedAmount() * 100;
 
+    let url = "http://localhost:3000/pay";
     if (isProd) {
       url = "https://" + process.env.VERCEL_URL + "/pay";
     }
-    return url;
+    return url + params;
   };
 
   const onCopyShareLink = async () => {
@@ -59,7 +61,6 @@ export default function SplitBill() {
     <ClientOnly>
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <main className="flex flex-col items-center justify-center px-20 text-center">
-          <h1 className="text-6xl font-bold mb-6">SLICE</h1>
           <Card className="w-[380px]">
             <CardHeader>
               <CardTitle>Describe your bill</CardTitle>

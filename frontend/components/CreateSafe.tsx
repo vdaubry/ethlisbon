@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ADAPTER_EVENTS, SafeEventEmitterProvider } from "@web3auth/base";
 import { GelatoRelayPack } from "@safe-global/relay-kit";
@@ -25,12 +26,14 @@ import {
 import { OperationType, SafeVersion } from "@safe-global/safe-core-sdk-types";
 import getSafeAuth from "@/utils/safeAuth";
 import { useGenericContext } from "@/contexts/GenericContext";
+import { GenericCard } from "@/components/GenericCard";
 
-const Web3Auth = () => {
+const CreateSafe = () => {
 	const [safeAuthSignInResponse, setSafeAuthSignInResponse] =
 		useState<SafeAuthSignInData | null>(null);
 	const [safeAuth, setSafeAuth] = useState<SafeAuthKit<Web3AuthModalPack>>();
 	const [userAddress, setUserAddress] = useState<string | null>(null);
+	const router = useRouter();
 
 	const safeVersion: SafeVersion = "1.3.0";
 
@@ -152,38 +155,21 @@ const Web3Auth = () => {
 		);
 
 		setSafeAddress(safeAddress);
-		return response1.taskId;
+		router.push("/contacts");
 	};
 	return (
-		<>
-			<div className="flex items-center justify-center w-full h-full">
-				<div className="max-w-md w-full my-4 ">
-					<div className="bg-slate-300 shadow-md rounded px-8 pt-6 pb-8">
-						<div className="mb-4">
-							<h2 className="block text-gray-700 text-2xl font-bold mb-2">
-								Sign In With Web3Auth
-							</h2>
-						</div>
-						<div>
-							<p>Your EOA address: </p>
-							<p>{userAddress}</p>
-						</div>
-					</div>
-					{userAddress && (
-						<div className="flex items-center justify-between mt-5">
-							<button
-								type="submit"
-								className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-								onClick={() => createSafe()}
-							>
-								Create Safe
-							</button>
-						</div>
-					)}
+		<div className="flex flex-col items-center justify-center py-2">
+			<main className="flex flex-col items-center justify-center text-center">
+				<div className="flex items-center justify-center text-center mt-3">
+					<GenericCard
+						title={"Create Safe to receive funds"}
+						footerText={"Create Safe"}
+						footerClick={() => createSafe()}
+					></GenericCard>
 				</div>
-			</div>
-		</>
+			</main>
+		</div>
 	);
 };
 
-export default Web3Auth;
+export default CreateSafe;

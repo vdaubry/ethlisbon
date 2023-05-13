@@ -79,7 +79,6 @@ export default function Split() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <main className="flex flex-col items-center justify-center flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold mb-6">SLICE</h1>
         <GenericCard
           title={name() || "Welcome"}
           subtitle={"Add your friends to split with"}
