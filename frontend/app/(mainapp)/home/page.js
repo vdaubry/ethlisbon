@@ -97,7 +97,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center py-2">
       <main className="flex flex-col items-center justify-center">
         {connectButton()}
-        <p className="mt-6 mb-3 text-lg">Don't have a wallet? No problem!</p>
+        <p className="mt-6 mb-3 text-lg">{"Don't have a wallet? No problem!"}</p>
         {loginButton()}
       </main>
     </div>
