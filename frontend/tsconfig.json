@@ -5,7 +5,8 @@
       "@/components/*": ["components/*"],
       "@/utils/*": ["utils/*"],
       "@/styles/*": ["styles/*"],
-      "@/constants/*": ["constants/*"]
+      "@/constants/*": ["constants/*"],
+      "@/contexts/*": ["contexts/*"]
     },
     "allowJs": true,
     "jsx": "preserve",
@@ -27,11 +28,5 @@
     ]
   },
   "exclude": ["node_modules"],
-  "include": [
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/app/(mainapp)/layout.js"
-  ]
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", ".next/types/app/(mainapp)/layout.js"]
 }

@@ -6,6 +6,7 @@ import { client } from "@/utils/wagmi";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import AppHeader from "@/components/AppHeader";
+import { CheckedContactsProvider } from "@/contexts/CheckedContactsContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,10 @@ export default function AppLayout({ children }) {
       <body className={inter.className}>
         <WagmiConfig client={client}>
           <ConnectKitProvider>
-            {children}
+            <CheckedContactsProvider>
+              <AppHeader />
+              {children}
+            </CheckedContactsProvider>
           </ConnectKitProvider>
         </WagmiConfig>
       </body>
