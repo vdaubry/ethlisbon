@@ -210,7 +210,7 @@ const CreateSafe = () => {
 		);
 
 		await setSafe(safeAddress_);
-		router.push("/contacts");
+		router.push("/verification");
 	};
 
 	return (
