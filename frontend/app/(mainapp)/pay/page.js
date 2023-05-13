@@ -8,11 +8,14 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GenericCard } from "@/components/GenericCard";
 import { Separator } from "@/components/ui/separator";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { ethers } from "ethers";
 import getSafeAuth from "@/utils/safeAuth";
 
 import { GelatoRelay } from "@gelatonetwork/relay-sdk";
+
+import { SafeOnRampKit, StripePack } from "@safe-global/onramp-kit";
 
 import ERC20ABI from "./abi/ERC20.json";
 
@@ -43,12 +46,21 @@ export default function Home() {
   // Safe Core + Auth + Relay
   const [safeAuth, setSafeAuth] = useState();
 
-  // Load information from URL
-  const url = new URL(document.location);
-  const [targetUser, setTargetUser] = useState(url.searchParams.get("userAddress") || null);
-  const [amountInCents, setAmountInCents] = useState(url.searchParams.get("amount") || null);
+  // Onramp
+  const [safeOnRamp, setSafeOnRamp] = useState();
+
+  // local state
+  const [targetUser, setTargetUser] = useState(null);
+  const [amountInCents, setAmountInCents] = useState(null);
 
   const { data: ensName } = useEnsName({ address: targetUser, chainId: 1 });
+
+  useEffect(() => {
+    // Load information from URL
+    const url = new URL(document.location);
+    setTargetUser(url.searchParams.get("userAddress") || null);
+    setAmountInCents(url.searchParams.get("amount") || null);
+  });
 
   useEffect(() => {
     (async () => {
@@ -63,6 +75,20 @@ export default function Home() {
     }
   }, [address, isConnected]);
 
+  useEffect(() => {
+    (async () => {
+      const safeOnRamp = await SafeOnRampKit.init(
+        new StripePack({
+          stripePublicKey:
+            "pk_test_51MZbmZKSn9ArdBimSyl5i8DqfcnlhyhJHD8bF2wKrGkpvNWyPvBAYtE211oHda0X3Ea1n4e9J9nh2JkpC7Sxm5a200Ug9ijfoO",
+          onRampBackendUrl: "https://aa-stripe.safe.global"
+        })
+      );
+
+      setSafeOnRamp(safeOnRamp);
+    })();
+  }, []);
+
   const web3Login = async () => {
     setLoading(prev => ({ ...prev, web3: true }));
     await connect();
@@ -75,36 +101,28 @@ export default function Home() {
     const localAmount = `${amountInCents.slice(0, -2)}.${amountInCents.slice(-2)}`;
     const amount = ethers.utils.parseUnits(localAmount, STABLE_DECIMALS);
 
-    const balance = await contract.balanceOf(address);
+    await contract.connect(signer).transfer(targetUser, amount);
 
-    console.log(balance.toString());
-    console.log(amount.toString());
-    console.log(localAmount);
-    console.log(await signer.getAddress());
-    console.log(targetUser);
+    // const { data } = await contract.connect(signer).populateTransaction.transfer(targetUser, amount);
 
-    // await contract.connect(signer).transfer(targetUser, amount);
+    // console.log("TX Populated");
 
-    const { data } = await contract.connect(signer).populateTransaction.transfer(targetUser, amount);
+    // const request = {
+    //   chainId: CHAIN_ID,
+    //   target: USDC_ADDRESS_GOERLI,
+    //   data: data,
+    //   gasLimit: "100000",
+    //   isSponsored: true,
+    //   user: await signer.getAddress()
+    // };
 
-    console.log("TX Populated");
+    // const relayKit = new GelatoRelay();
 
-    const request = {
-      chainId: CHAIN_ID,
-      target: USDC_ADDRESS_GOERLI,
-      data: data,
-      gasLimit: "100000",
-      isSponsored: true,
-      user: await signer.getAddress()
-    };
+    // console.log("Gelato initialized - sending sponsored call");
 
-    const relayKit = new GelatoRelay();
+    // const response = await relayKit.sponsoredCall(request, "JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_");
 
-    console.log("Gelato initialized - sending sponsored call");
-
-    const response = await relayKit.sponsoredCall(request, "JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_");
-
-    console.log(`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`);
+    // console.log(`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`);
   };
 
   const connectButton = () => {
@@ -140,17 +158,40 @@ export default function Home() {
       );
     } else {
       return (
-        <Button className="my-6 w-full" variant="outline" onClick={() => web3Login()}>
+        <Button className="my-6 w-full" variant="outline" onClick={() => stripeFlow()}>
           I don't have crypto
         </Button>
       );
     }
   };
 
-  const stripeFlow = () => {
-    // @TODO - implement stripe flow
+  const stripeFlow = async () => {
     setLoading(prev => ({ ...prev, web2: true }));
     console.log("stripe flow");
+
+    await safeOnRamp.open({
+      element: "#stripe-root",
+      theme: "light",
+      defaultOptions: {
+        transaction_details: {
+          // TODO : should be safe address not EOA address
+          wallet_address: targetUser,
+          supported_destination_networks: ["ethereum", "polygon"],
+          supported_destination_currencies: ["usdc"],
+          lock_wallet_address: true
+        },
+        customer_information: {}
+      }
+    });
+
+    safeOnRamp.subscribe("onramp_ui_loaded", () => {
+      console.log("UI loaded");
+      setLoading(prev => ({ ...prev, web2: false }));
+    });
+
+    safeOnRamp.subscribe("onramp_session_updated", e => {
+      console.log("Session Updated", e.payload);
+    });
   };
 
   const prettyfyUserAddress = () => {
@@ -179,7 +220,12 @@ export default function Home() {
             {connectButton()}
             <Separator className="mb-5" />
             <p className="text-sm text-gray-500">Don't have crypto? Use your Credit Card.</p>
-            {stripeButton()}
+            <Popover modal={true}>
+              <PopoverTrigger asChild>{stripeButton()}</PopoverTrigger>
+              <PopoverContent className="border-0 bg-transparent shadow-none w-96">
+                <div id="stripe-root"></div>
+              </PopoverContent>
+            </Popover>
           </div>
         </GenericCard>
       </main>
