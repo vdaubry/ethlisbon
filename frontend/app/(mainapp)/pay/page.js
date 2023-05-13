@@ -268,7 +268,7 @@ export default function Pay() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen py-2">
+    <div className="flex flex-col items-center min-h-screen py-6 ">
       <main className="flex flex-col items-center flex-1 px-20 text-center">
         <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo" />
         <GenericCard title={`${prettyfyUserAddress()} is asking for a slice 🍰`}>
