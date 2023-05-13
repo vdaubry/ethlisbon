@@ -6,7 +6,7 @@ import { SafeAuthKit, Web3AuthModalPack } from "@/utils/safe-core/index";
 const getSafeAuth = async () => {
   const options: Web3AuthOptions = {
     clientId:
-      "BNcj0sLcTDZbJROfleFr6YPIcfIX6-Z2ZPFiIkl3Pvqtavkxhcn4hK5nrY_MWcovRQdvwCWhj6s_ufi8TbC34oU",
+      "BFkyabEyU2-71YYeH37lA_edXmx7uKXjh4VyGtOzpSzIZKsMATIkIanmcuuopwiGExAdtQwEHIc8x4mC1tT1b7w",
     web3AuthNetwork: "testnet",
     chainConfig: {
       chainNamespace: CHAIN_NAMESPACES.EIP155,
