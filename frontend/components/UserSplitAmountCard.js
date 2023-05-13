@@ -1,7 +1,6 @@
 import { User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const UserSplitAmountCard = ({ contactName, amount, sharingLinks, onCopyShareLink }) => {
   return (
