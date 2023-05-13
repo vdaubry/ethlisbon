@@ -29,10 +29,9 @@ import { GenericCard } from "@/components/GenericCard";
 import {
 	useNetwork,
 	useAccount,
-	useContractWrite,
-	usePrepareContractWrite,
+	useContract,
 	useWaitForTransaction,
-	useContractEvent,
+	useSigner,
 } from "wagmi";
 import { contractAddresses, contractAbi } from "@/constants/index";
 import {
@@ -52,41 +51,58 @@ const CreateSafe = () => {
 
 	const safeVersion: SafeVersion = "1.3.0";
 
-	// Local state
-	const [safeAddress, setSafeAddress] = useState<string | null>(null);
+	const SetSafe = async (address) => {
+		/* Wagmi hooks*/
+		const CHAIN_ID = 5;
+		const contractAddress = contractAddresses[CHAIN_ID]["contract"];
 
-	/* Wagmi hooks*/
-	let contractAddress;
+		const { data: signer } = useSigner();
 
-	if (chain && contractAddresses[chain.id]) {
-		const chainId = chain.id;
-		contractAddress = contractAddresses[chainId]["contract"];
-	}
+		const contract = useContract({
+			address: contractAddress,
+			abi: contractAbi,
+			chainId: CHAIN_ID,
+			signerOrProvider: signer,
+		});
 
-	const { config } = usePrepareContractWrite({
-		address: contractAddress,
-		abi: contractAbi,
-		functionName: "setSafe",
-		args: [safeAddress],
-	});
+		const { setsafeData } = await contract
+			.connect(signer)
+			.populateTransaction.callStatic(contractAddress, safeAddress);
 
-	const { data, write: setSafeOnContract } = useContractWrite({
-		...config,
-		onError(error) {
-			handleFailureNotification(error.message);
-		},
-	});
+		const request = {
+			chainId: CHAIN_ID,
+			target: contractAddress,
+			data: setsafeData,
+			gasLimit: "100000",
+			isSponsored: true,
+			user: await signer.getAddress(),
+		};
+	};
 
-	const { isLoading } = useWaitForTransaction({
-		hash: data?.hash,
-		confirmations: 1,
-		onError(error) {
-			handleFailureNotification(error.message);
-		},
-		onSuccess(data) {
-			handleSuccessNotification();
-		},
-	});
+	// const { config } = usePrepareContractWrite({
+	// 	address: contractAddress,
+	// 	abi: contractAbi,
+	// 	functionName: "setSafe",
+	// 	args: [safeAddress],
+	// });
+
+	// const { data, write: setSafeOnContract } = useContractWrite({
+	// 	...config,
+	// 	onError(error) {
+	// 		handleFailureNotification(error.message);
+	// 	},
+	// });
+
+	// const { isLoading } = useWaitForTransaction({
+	// 	hash: data?.hash,
+	// 	confirmations: 1,
+	// 	onError(error) {
+	// 		handleFailureNotification(error.message);
+	// 	},
+	// 	onSuccess(data) {
+	// 		handleSuccessNotification();
+	// 	},
+	// });
 
 	useEffect(() => {
 		(async () => {
@@ -202,14 +218,14 @@ const CreateSafe = () => {
 			`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response1.taskId}`
 		);
 
-		setSafeAddress(safeAddress_);
-		await setSafeOnContract();
+		await SetSafe(safeAddress_);
 		router.push("/contacts");
 	};
 
 	return (
 		<div className="flex flex-col items-center justify-center py-2">
 			<main className="flex flex-col items-center justify-center text-center">
+				<h1 className="text-6xl font-bold mb-6">SLICE</h1>
 				<div className="flex items-center justify-center text-center mt-3">
 					<GenericCard
 						className={""}
@@ -218,9 +234,7 @@ const CreateSafe = () => {
 						footerText={"Create Safe"}
 						footerClick={() => createSafe()}
 					>
-						<div>
-							<p>Your safe address: {safeAddress} </p>
-						</div>
+						<div></div>
 					</GenericCard>
 				</div>
 			</main>

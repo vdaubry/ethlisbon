@@ -1,0 +1,89 @@
+{
+  "address": "0x1b97A3679A9c2b2E62A770bBaF8F25Ce47B7310A",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "getSafe",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "safe",
+          "type": "address"
+        }
+      ],
+      "name": "setSafe",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xa7dfec9c92f49c3376f63943aebd7e303551c9495545282a1787d3a470163b35",
+  "receipt": {
+    "to": null,
+    "from": "0xCe2289B87b80457AC7f07352b25D2576BD6D88D8",
+    "contractAddress": "0x1b97A3679A9c2b2E62A770bBaF8F25Ce47B7310A",
+    "transactionIndex": 19,
+    "gasUsed": "180041",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xee51e85ac497b7f018e1f7f2a422bbdd343415dd8ecbc383adfc1a48d08f80ce",
+    "transactionHash": "0xa7dfec9c92f49c3376f63943aebd7e303551c9495545282a1787d3a470163b35",
+    "logs": [],
+    "blockNumber": 8994092,
+    "cumulativeGasUsed": "2685482",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "30bc4d42b0e0bb02e486c1cf4ae1a067",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"getSafe\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"safe\",\"type\":\"address\"}],\"name\":\"setSafe\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Slice.sol\":\"Slice\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/Slice.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.17;\\n\\ncontract Slice {\\n    mapping(address => address) eoaToSafe;\\n\\n    function setSafe(address safe) public {\\n        eoaToSafe[msg.sender] = safe;\\n    }\\n\\n    function getSafe() public view returns (address) {\\n        return eoaToSafe[msg.sender];\\n    }\\n}\\n\",\"keccak256\":\"0x2656185dad21cea0ab19e941229fb89450fffe25418cb5c91d35681a4810094c\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061024b806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c80635db0cb941461003b57806368bc573e14610057575b600080fd5b610055600480360381019061005091906101be565b610075565b005b61005f6100f5565b60405161006c91906101fa565b60405180910390f35b806000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061018b82610160565b9050919050565b61019b81610180565b81146101a657600080fd5b50565b6000813590506101b881610192565b92915050565b6000602082840312156101d4576101d361015b565b5b60006101e2848285016101a9565b91505092915050565b6101f481610180565b82525050565b600060208201905061020f60008301846101eb565b9291505056fea26469706673582212205376bfeb77b2790a31a8dd3299f02ba55ddaec7c9ecb1262e30ed869375dcd9864736f6c63430008130033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c80635db0cb941461003b57806368bc573e14610057575b600080fd5b610055600480360381019061005091906101be565b610075565b005b61005f6100f5565b60405161006c91906101fa565b60405180910390f35b806000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b60008060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061018b82610160565b9050919050565b61019b81610180565b81146101a657600080fd5b50565b6000813590506101b881610192565b92915050565b6000602082840312156101d4576101d361015b565b5b60006101e2848285016101a9565b91505092915050565b6101f481610180565b82525050565b600060208201905061020f60008301846101eb565b9291505056fea26469706673582212205376bfeb77b2790a31a8dd3299f02ba55ddaec7c9ecb1262e30ed869375dcd9864736f6c63430008130033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 5,
+        "contract": "contracts/Slice.sol:Slice",
+        "label": "eoaToSafe",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_address,t_address)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_address)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => address)",
+        "numberOfBytes": "32",
+        "value": "t_address"
+      }
+    }
+  }
+}

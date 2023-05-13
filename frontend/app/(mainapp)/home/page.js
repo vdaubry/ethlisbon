@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount, useConnect, useEnsName } from "wagmi";
+import { useAccount, useConnect, useContractRead } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { ADAPTER_EVENTS } from "@web3auth/base";
 import getSafeAuth from "@/utils/safeAuth";
@@ -10,6 +10,8 @@ import getSafeAuth from "@/utils/safeAuth";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GenericCard } from "@/components/GenericCard";
+
+import { contractAddresses, contractAbi } from "@/constants/index";
 
 const connectedHandler = data => console.log("CONNECTED", data);
 const disconnectedHandler = data => console.log("DISCONNECTED", data);
@@ -24,6 +26,18 @@ export default function Home() {
   const [loading, setLoading] = useState({
     web3: false,
     web2: false
+  });
+  const [eoaAddress, setEoaAddress] = useState(address);
+
+  /* Wagmi hooks */
+  const CHAIN_ID = 5;
+  const contractAddress = contractAddresses[CHAIN_ID]["contract"];
+
+  const { data: readSafeAddressFromContract } = useContractRead({
+    address: contractAddress,
+    abi: contractAbi,
+    functionName: "getSafe",
+    args: []
   });
 
   useEffect(() => {
@@ -44,19 +58,31 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (address) {
-      router.push("/contacts");
+    if (eoaAddress) {
+      console.log("perform redirect");
+      performRedirect();
     }
   }, [address, isConnected]);
+
+  const performRedirect = async () => {
+    console.log("EOA address", eoaAddress);
+
+    const safeAddress = await readSafeAddressFromContract();
+    if (safeAddress) {
+      router.push("/contracts");
+    } else {
+      router.push("/safe");
+    }
+  };
 
   const socialLogin = async () => {
     if (!safeAuth) return;
     setLoading(prev => ({ ...prev, web2: true }));
 
     const response = await safeAuth.signIn();
-    if (response.eoa) {
-      router.push("/contacts");
-    }
+
+    await setEoaAddress(response.eoa);
+    await performRedirect();
   };
 
   const web3Login = async () => {

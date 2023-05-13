@@ -22,7 +22,7 @@ export default function SafePage() {
 
   return (
     <ClientOnly>
-      <CreateSafe/>
+      <CreateSafe />
     </ClientOnly>
   );
 }

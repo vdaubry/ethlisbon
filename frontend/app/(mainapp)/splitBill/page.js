@@ -11,11 +11,13 @@ import { GenericCard } from "@/components/GenericCard";
 import UserSplitAmountCard from "@/components/UserSplitAmountCard";
 import { User } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { contractAddresses, contractAbi } from "@/constants/index";
+import { useAccount, useConnect, useContractRead } from "wagmi";
 
 export default function SplitBill() {
   const [hasMounted, setHasMounted] = useState(false);
   const { checkedContacts, setCheckedContacts } = useGenericContext([]);
-  const { safeAddress } = useGenericContext("");
+  const { address, isConnected } = useAccount();
 
   const [totalAmount, setTotalAmount] = useState(30);
   const [sharingLinks, setSharingLinks] = useState(false);
@@ -23,6 +25,17 @@ export default function SplitBill() {
   if (checkedContacts.length === 0) {
     setCheckedContacts(["foo", "bar"]);
   }
+
+  /* Wagmi hooks */
+  const CHAIN_ID = 5;
+  const contractAddress = contractAddresses[CHAIN_ID]["contract"];
+
+  const { data: readSafeAddressFromContract } = useContractRead({
+    address: contractAddress,
+    abi: contractAbi,
+    functionName: "getSafe",
+    args: []
+  });
 
   /**************************************
    *
@@ -42,7 +55,8 @@ export default function SplitBill() {
     return totalAmount / (checkedContacts.length + 1);
   };
 
-  const getShareLink = () => {
+  const getShareLink = async () => {
+    const safeAddress = await readSafeAddressFromContract();
     const isProd = process.env.VERCEL_ENV === "production";
 
     const params = "?safeAddress=" + safeAddress + "&amount=" + getSplittedAmount() * 100;
@@ -55,7 +69,7 @@ export default function SplitBill() {
   };
 
   const onCopyShareLink = async () => {
-    await navigator.clipboard.writeText(getShareLink());
+    await navigator.clipboard.writeText(await getShareLink());
   };
 
   if (!hasMounted) return null;
