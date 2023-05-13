@@ -9,14 +9,16 @@ export const GenericCard = ({ className, title, subtitle, footerText, footerClic
     <Card className={cn("w-[380px]", className)} {...props}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{subtitle}</CardDescription>
+        {subtitle && <CardDescription>{subtitle}</CardDescription>}
       </CardHeader>
       <CardContent className="grid gap-4">{children}</CardContent>
-      <CardFooter>
-        <Button className="w-full" onClick={footerClick}>
-          {footerText}
-        </Button>
-      </CardFooter>
+      {footerText && (
+        <CardFooter>
+          <Button className="w-full" onClick={footerClick}>
+            {footerText}
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 };
