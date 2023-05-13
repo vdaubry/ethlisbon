@@ -18,12 +18,16 @@ import {
 } from "@/utils/safe-core/index";
 import { OperationType } from "@safe-global/safe-core-sdk-types";
 import getSafeAuth from "@/utils/safeAuth";
+import { useGenericContext } from "@/contexts/GenericContext";
 
 const Web3Auth = () => {
 	const [safeAuthSignInResponse, setSafeAuthSignInResponse] =
 		useState<SafeAuthSignInData | null>(null);
 	const [safeAuth, setSafeAuth] = useState<SafeAuthKit<Web3AuthModalPack>>();
 	const [userAddress, setUserAddress] = useState<string | null>(null);
+
+	// Shared state
+	const { safeAddress, setSafeAddress } = useGenericContext();
 
 	useEffect(() => {
 		(async () => {
@@ -58,94 +62,95 @@ const Web3Auth = () => {
 		const _safeAddress = await safeSdkOwner1.getAddress();
 
 		console.log("Safe address: ", _safeAddress);
+		setSafeAddress(_safeAddress);
 	};
 
-	const sendMoneyToSafe = async () => {
-		const provider = new ethers.providers.Web3Provider(safeAuth.getProvider());
-		const signer = provider.getSigner();
+	// const sendMoneyToSafe = async () => {
+	// 	const provider = new ethers.providers.Web3Provider(safeAuth.getProvider());
+	// 	const signer = provider.getSigner();
 
-		const ethAdapter = new EthersAdapter({
-			ethers,
-			signerOrProvider: signer || provider,
-		});
+	// 	const ethAdapter = new EthersAdapter({
+	// 		ethers,
+	// 		signerOrProvider: signer || provider,
+	// 	});
 
-		const safeAddress = "0x8A1385140F9d31B34c6659063BAf7bc5238db2e9";
+	// 	const safeAddress = "0x8A1385140F9d31B34c6659063BAf7bc5238db2e9";
 
-		const safeSDK = await Safe.create({
-			ethAdapter: ethAdapter,
-			safeAddress,
-		});
+	// 	const safeSDK = await Safe.create({
+	// 		ethAdapter: ethAdapter,
+	// 		safeAddress,
+	// 	});
 
-		const destinationAddress = "0x33041027dd8F4dC82B6e825FB37ADf8f15d44053";
-		const withdrawAmount = ethers.utils.parseUnits("0.005", "ether").toString();
+	// 	const destinationAddress = "0x33041027dd8F4dC82B6e825FB37ADf8f15d44053";
+	// 	const withdrawAmount = ethers.utils.parseUnits("0.005", "ether").toString();
 
-		const gasLimit = "100000";
-		const safeTransactionData = {
-			to: destinationAddress,
-			data: "0x", // leave blank for native token transfers
-			value: withdrawAmount,
-			operation: OperationType.Call,
-		};
+	// 	const gasLimit = "100000";
+	// 	const safeTransactionData = {
+	// 		to: destinationAddress,
+	// 		data: "0x", // leave blank for native token transfers
+	// 		value: withdrawAmount,
+	// 		operation: OperationType.Call,
+	// 	};
 
-		const options = {
-			gasLimit,
-			isSponsored: true,
-		};
+	// 	const options = {
+	// 		gasLimit,
+	// 		isSponsored: true,
+	// 	};
 
-		console.log("DATA Prepared");
+	// 	console.log("DATA Prepared");
 
-		const relayKit = new GelatoRelayPack(
-			"JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_"
-		);
+	// 	const relayKit = new GelatoRelayPack(
+	// 		"JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_"
+	// 	);
 
-		console.log("Gelato initialized");
+	// 	console.log("Gelato initialized");
 
-		const safeTransaction = await safeSDK.createTransaction({
-			safeTransactionData,
-		});
+	// 	const safeTransaction = await safeSDK.createTransaction({
+	// 		safeTransactionData,
+	// 	});
 
-		console.log("transaction initialized");
+	// 	console.log("transaction initialized");
 
-		const signedSafeTx = await safeSDK.signTransaction(safeTransaction);
+	// 	const signedSafeTx = await safeSDK.signTransaction(safeTransaction);
 
-		console.log("transaction signed");
+	// 	console.log("transaction signed");
 
-		const safeSingletonContract = await getSafeContract({
-			ethAdapter: ethAdapter,
-			safeVersion: await safeSDK.getContractVersion(),
-		});
+	// 	const safeSingletonContract = await getSafeContract({
+	// 		ethAdapter: ethAdapter,
+	// 		safeVersion: await safeSDK.getContractVersion(),
+	// 	});
 
-		console.log("safe contract fetched");
+	// 	console.log("safe contract fetched");
 
-		const encodedTx = safeSingletonContract.encode("execTransaction", [
-			signedSafeTx.data.to,
-			signedSafeTx.data.value,
-			signedSafeTx.data.data,
-			signedSafeTx.data.operation,
-			signedSafeTx.data.safeTxGas,
-			signedSafeTx.data.baseGas,
-			signedSafeTx.data.gasPrice,
-			signedSafeTx.data.gasToken,
-			signedSafeTx.data.refundReceiver,
-			signedSafeTx.encodedSignatures(),
-		]);
+	// 	const encodedTx = safeSingletonContract.encode("execTransaction", [
+	// 		signedSafeTx.data.to,
+	// 		signedSafeTx.data.value,
+	// 		signedSafeTx.data.data,
+	// 		signedSafeTx.data.operation,
+	// 		signedSafeTx.data.safeTxGas,
+	// 		signedSafeTx.data.baseGas,
+	// 		signedSafeTx.data.gasPrice,
+	// 		signedSafeTx.data.gasToken,
+	// 		signedSafeTx.data.refundReceiver,
+	// 		signedSafeTx.encodedSignatures(),
+	// 	]);
 
-		console.log("tx encoded");
+	// 	console.log("tx encoded");
 
-		const relayTransaction = {
-			target: safeAddress,
-			encodedTransaction: encodedTx,
-			chainId: 5, // GOERLI
-			options,
-		};
+	// 	const relayTransaction = {
+	// 		target: safeAddress,
+	// 		encodedTransaction: encodedTx,
+	// 		chainId: 5, // GOERLI
+	// 		options,
+	// 	};
 
-		console.log("relay sent");
-		const response = await relayKit.relayTransaction(relayTransaction);
+	// 	console.log("relay sent");
+	// 	const response = await relayKit.relayTransaction(relayTransaction);
 
-		console.log(
-			`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
-		);
-	};
+	// 	console.log(
+	// 		`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
+	// 	);
+	// };
 
 	return (
 		<>
@@ -164,13 +169,13 @@ const Web3Auth = () => {
 					</div>
 					{userAddress && (
 						<div className="flex items-center justify-between mt-5">
-							<button
+							{/* <button
 								type="submit"
 								className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 								onClick={() => sendMoneyToSafe()}
 							>
 								Send funds to safe
-							</button>
+							</button> */}
 							<button
 								type="submit"
 								className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

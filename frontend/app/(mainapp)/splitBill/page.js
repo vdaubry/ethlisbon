@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ClientOnly from "@/components/clientOnly";
-import { useCheckedContacts } from "@/contexts/CheckedContactsContext";
+import { useCheckedContacts } from "@/contexts/GenericContext";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
