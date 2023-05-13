@@ -58,13 +58,13 @@ export default function SplitBill() {
 
   const getShareLink = async () => {
     const safeAddress = await getSafeAddressFromContract();
-    const isProd = process.env.VERCEL_ENV === "production";
+    const isLocal = window.location.href.indexOf("localhost") != -1;
 
     const params = "?safeAddress=" + safeAddress + "&amount=" + getSplittedAmount() * 100;
 
-    let url = "http://localhost:3000/pay";
-    if (isProd) {
-      url = "https://" + process.env.VERCEL_URL + "/pay";
+    let url = "https://ethlisbon-git-master-vdaubry.vercel.app/pay";
+    if (isLocal) {
+      url = "http://localhost:3000/pay";
     }
     return url + params;
   };
