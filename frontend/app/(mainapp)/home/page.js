@@ -54,7 +54,7 @@ export default function Home() {
 
     const response = await safeAuth.signIn();
     if (response.eoa) {
-      router.push("/contacts");
+      router.push("/safe");
     }
   };
 
