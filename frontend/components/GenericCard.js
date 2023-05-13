@@ -4,7 +4,16 @@ import { cn } from "@/utils/tailwindHelpers";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
-export const GenericCard = ({ className, title, subtitle, footerText, footerClick, children, ...props }) => {
+export const GenericCard = ({
+  className,
+  title,
+  subtitle,
+  footerText,
+  footerClick,
+  children,
+  disableFooterButton = false,
+  ...props
+}) => {
   return (
     <Card className={cn("w-[380px]", className)} {...props}>
       <CardHeader>
@@ -14,7 +23,7 @@ export const GenericCard = ({ className, title, subtitle, footerText, footerClic
       <CardContent className="grid gap-4">{children}</CardContent>
       {footerText && (
         <CardFooter>
-          <Button className="w-full" onClick={footerClick}>
+          <Button className="w-full" onClick={footerClick} disabled={disableFooterButton}>
             {footerText}
           </Button>
         </CardFooter>
