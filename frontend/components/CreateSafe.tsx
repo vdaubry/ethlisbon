@@ -25,8 +25,20 @@ import {
 } from "@/utils/safe-core/index";
 import { OperationType, SafeVersion } from "@safe-global/safe-core-sdk-types";
 import getSafeAuth from "@/utils/safeAuth";
-import { useGenericContext } from "@/contexts/GenericContext";
 import { GenericCard } from "@/components/GenericCard";
+import {
+	useNetwork,
+	useAccount,
+	useContractWrite,
+	usePrepareContractWrite,
+	useWaitForTransaction,
+	useContractEvent,
+} from "wagmi";
+import { contractAddresses, contractAbi } from "@/constants/index";
+import {
+	handleFailureNotification,
+	handleSuccessNotification,
+} from "@/utils/notifications";
 
 const CreateSafe = () => {
 	const [safeAuthSignInResponse, setSafeAuthSignInResponse] =
@@ -35,10 +47,46 @@ const CreateSafe = () => {
 	const [userAddress, setUserAddress] = useState<string | null>(null);
 	const router = useRouter();
 
+	const { chain } = useNetwork();
+	const { address: account } = useAccount();
+
 	const safeVersion: SafeVersion = "1.3.0";
 
-	// Shared state
-	const { safeAddress, setSafeAddress } = useGenericContext();
+	// Local state
+	const [safeAddress, setSafeAddress] = useState<string | null>(null);
+
+	/* Wagmi hooks*/
+	let contractAddress;
+
+	if (chain && contractAddresses[chain.id]) {
+		const chainId = chain.id;
+		contractAddress = contractAddresses[chainId]["contract"];
+	}
+
+	const { config } = usePrepareContractWrite({
+		address: contractAddress,
+		abi: contractAbi,
+		functionName: "setSafe",
+		args: [safeAddress],
+	});
+
+	const { data, write: setSafeOnContract } = useContractWrite({
+		...config,
+		onError(error) {
+			handleFailureNotification(error.message);
+		},
+	});
+
+	const { isLoading } = useWaitForTransaction({
+		hash: data?.hash,
+		confirmations: 1,
+		onError(error) {
+			handleFailureNotification(error.message);
+		},
+		onSuccess(data) {
+			handleSuccessNotification();
+		},
+	});
 
 	useEffect(() => {
 		(async () => {
@@ -82,13 +130,13 @@ const CreateSafe = () => {
 
 		console.log("getProxyFactoryContract: ", safeProxyFactoryContract);
 
-		const safeAddress = await predictSafeAddress({
+		const safeAddress_ = await predictSafeAddress({
 			ethAdapter: ethAdapter,
 			safeAccountConfig,
 			safeDeploymentConfig,
 		});
 
-		console.log("predictSafeAddres: ", safeAddress);
+		console.log("predictSafeAddres: ", safeAddress_);
 
 		const safeContract = await getSafeContract({
 			ethAdapter: ethAdapter,
@@ -154,9 +202,11 @@ const CreateSafe = () => {
 			`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response1.taskId}`
 		);
 
-		setSafeAddress(safeAddress);
+		setSafeAddress(safeAddress_);
+		await setSafeOnContract();
 		router.push("/contacts");
 	};
+
 	return (
 		<div className="flex flex-col items-center justify-center py-2">
 			<main className="flex flex-col items-center justify-center text-center">
@@ -169,7 +219,7 @@ const CreateSafe = () => {
 						footerClick={() => createSafe()}
 					>
 						<div>
-							<p>Foo</p>
+							<p>Your safe address: {safeAddress} </p>
 						</div>
 					</GenericCard>
 				</div>
