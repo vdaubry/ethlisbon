@@ -15,6 +15,7 @@ export default function SplitBill() {
   const [hasMounted, setHasMounted] = useState(false);
   const { checkedContacts, setCheckedContacts } = useCheckedContacts([]);
   const [totalAmount, setTotalAmount] = useState(30);
+  const [sharingLinks, setSharingLinks] = useState(false);
 
   if (checkedContacts.length === 0) {
     setCheckedContacts(["foo", "bar"]);
@@ -36,6 +37,21 @@ export default function SplitBill() {
 
   const getSplittedAmount = () => {
     return totalAmount / (checkedContacts.length + 1);
+  };
+
+  const getShareLink = () => {
+    const isProd = process.env.VERCEL_ENV === "production";
+
+    let url = "http://localhost:3000/pay";
+
+    if (isProd) {
+      url = "https://" + process.env.VERCEL_URL + "/pay";
+    }
+    return url;
+  };
+
+  const onCopyShareLink = async () => {
+    await navigator.clipboard.writeText(getShareLink());
   };
 
   if (!hasMounted) return null;
@@ -71,13 +87,19 @@ export default function SplitBill() {
           <GenericCard
             title={"Split the bill"}
             subtitle={"Choose an amount for each person"}
-            footerText={"Get sharing link"}
-            footerClick={() => onGenerateSharinLinks()}
+            footerText={sharingLinks ? "Edit splitted amounts" : "Get sharing links"}
+            footerClick={() => setSharingLinks(!sharingLinks)}
           >
             <div>
               <UserSplitAmountCard contactName="Myself" amount={getSplittedAmount()} />
               {checkedContacts.map((contactName, index) => (
-                <UserSplitAmountCard key={index} contactName={contactName} amount={getSplittedAmount()} />
+                <UserSplitAmountCard
+                  key={index}
+                  contactName={contactName}
+                  amount={getSplittedAmount()}
+                  sharingLinks={sharingLinks}
+                  onCopyShareLink={onCopyShareLink}
+                />
               ))}
             </div>
           </GenericCard>
