@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import ClientOnly from "@/components/clientOnly";
 import { useGenericContext } from "@/contexts/GenericContext";
 
@@ -49,9 +50,9 @@ export default function SplitBill() {
   if (!hasMounted) return null;
   return (
     <ClientOnly>
-      <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <main className="flex flex-col items-center justify-center px-20 text-center">
-          <h1 className="text-6xl font-bold mb-6">SLICE</h1>
+      <div className="flex flex-col items-center min-h-screen py-2">
+        <main className="flex flex-col items-center flex-1 px-20 text-center">
+          <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo" />
           <Card className="w-[380px]">
             <CardHeader>
               <CardTitle>Slicing 🔪</CardTitle>

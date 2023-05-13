@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAccount, useEnsName } from "wagmi";
@@ -77,9 +78,9 @@ export default function Split() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <main className="flex flex-col items-center justify-center flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold mb-6">SLICE</h1>
+    <div className="flex flex-col items-center min-h-screen py-2">
+      <main className="flex flex-col items-center flex-1 px-20 text-center">
+        <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo" />
         <GenericCard
           title={"gm [name] 👋"}
           subtitle={"Who do you want to split the bill with?"}

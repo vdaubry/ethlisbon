@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ADAPTER_EVENTS, SafeEventEmitterProvider } from "@web3auth/base";
@@ -158,8 +159,9 @@ const CreateSafe = () => {
 		router.push("/contacts");
 	};
 	return (
-		<div className="flex flex-col items-center justify-center py-2">
-			<main className="flex flex-col items-center justify-center text-center">
+    <div className="flex flex-col items-center min-h-screen py-2">
+      <main className="flex flex-col items-center flex-1 px-20 text-center">
+        <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo"/>
 				<div className="flex items-center justify-center text-center mt-3">
 					<GenericCard
 						className={""}
