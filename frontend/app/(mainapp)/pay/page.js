@@ -185,7 +185,7 @@ export default function Pay() {
       return (
         <Button className="my-6 w-full" variant="success">
           <Check className="mr-2 h-4 w-4" />
-          You're settled!
+          You&apos;re settled!
         </Button>
       );
     } else if (address) {
