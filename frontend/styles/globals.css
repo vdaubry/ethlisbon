@@ -10,6 +10,10 @@
   scroll-behavior: smooth;
 }
 
+body {
+  background-color: #F8FAFF;
+}
+
 .gradient-01 {
   background-image: linear-gradient(
     270deg,

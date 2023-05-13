@@ -10,6 +10,7 @@ import getSafeAuth from "@/utils/safeAuth";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GenericCard } from "@/components/GenericCard";
+import Image from "next/image";
 
 import { contractAddresses, contractAbi } from "@/constants/index";
 import { ethers } from "ethers";
@@ -131,9 +132,9 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <main className="flex flex-col items-center justify-center flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold mb-6">SLICE</h1>
+    <div className="flex flex-col items-center min-h-screen py-2">
+      <main className="flex flex-col items-center flex-1 px-20 text-center">
+        <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo" />
         <GenericCard title={"Pay, get paid and split bills in crypto using just a phone number."}>
           <div className="flex flex-col w-full max-w-sm items-center">
             {connectButton()}

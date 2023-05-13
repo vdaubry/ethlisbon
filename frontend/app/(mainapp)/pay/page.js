@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useAccount, useConnect, useEnsName, useContract, useSigner } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GenericCard } from "@/components/GenericCard";
 import { Separator } from "@/components/ui/separator";
@@ -25,7 +26,7 @@ const PAY_CONTRACT_ADDRESS = "0x5D05EAE2057Dc6cC36E3f79dA98365dEfD9489D5";
 const CHAIN_ID = 5;
 const STABLE_DECIMALS = 6;
 
-export default function Home() {
+export default function Pay() {
   // Web3 Account
   const { address, isConnected } = useAccount();
   const { connect } = useConnect({
@@ -61,6 +62,9 @@ export default function Home() {
   // local state
   const [targetUser, setTargetUser] = useState(null);
   const [amountInCents, setAmountInCents] = useState(null);
+  const [paymentInProgress, setPaymentInProgress] = useState(false);
+  const [relayKitUrl, setRelayKitUrl] = useState(null);
+  const [web3Success, setWeb3Success] = useState(false);
 
   const { data: ensName } = useEnsName({ address: targetUser, chainId: 1 });
 
@@ -98,6 +102,31 @@ export default function Home() {
     })();
   }, []);
 
+  useEffect(() => {
+    if (relayKitUrl && !paymentInProgress) {
+      console.log("TRACKING STARTED");
+      setPaymentInProgress(true);
+      trackRelayProgress();
+    }
+  }, [relayKitUrl]);
+
+  const trackRelayProgress = async () => {
+    const response = await fetch(relayKitUrl);
+    console.log(response);
+    const data = await response.json();
+
+    console.log(data);
+
+    if (data?.task?.taskState === "ExecSuccess") {
+      console.log("Relay Transaction Executed");
+      setRelayKitUrl(null);
+      setPaymentInProgress(false);
+      setWeb3Success(true);
+    } else {
+      setTimeout(trackRelayProgress, 1000);
+    }
+  };
+
   const web3Login = async () => {
     setLoading(prev => ({ ...prev, web3: true }));
     await connect();
@@ -133,6 +162,7 @@ export default function Home() {
 
       const response = await relayKit.sponsoredCall(request, "JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_");
 
+      setRelayKitUrl(`https://relay.gelato.digital/tasks/status/${response.taskId}`);
       console.log(`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`);
     } else {
       // if it doesn't we do the web3 way with a regular transfer
@@ -146,6 +176,20 @@ export default function Home() {
         <Button disabled className="my-6 w-full">
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Please wait
+        </Button>
+      );
+    } else if (paymentInProgress) {
+      return (
+        <Button disabled className="my-6 w-full">
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Waiting for transaction to run
+        </Button>
+      );
+    } else if (web3Success) {
+      return (
+        <Button className="my-6 w-full" variant="success">
+          <Check className="mr-2 h-4 w-4" />
+          You&apos;re settled!
         </Button>
       );
     } else if (address) {
@@ -220,13 +264,13 @@ export default function Home() {
   const parseAmount = () => {
     if (!amountInCents) return "$0.00";
 
-    return `$${amountInCents.slice(0, -2)}.${amountInCents.slice(-2)}`;
+    return `${amountInCents.slice(0, -2)}.${amountInCents.slice(-2)} USDC`;
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <main className="flex flex-col items-center justify-center flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold mb-6">SLICE</h1>
+    <div className="flex flex-col items-center min-h-screen py-2">
+      <main className="flex flex-col items-center flex-1 px-20 text-center">
+        <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo" />
         <GenericCard title={`${prettyfyUserAddress()} is asking for a slice 🍰`}>
           <div className="flex flex-col w-full max-w-sm items-center">
             <p className="text-xl bold mb-5">Amount: {parseAmount()}</p>

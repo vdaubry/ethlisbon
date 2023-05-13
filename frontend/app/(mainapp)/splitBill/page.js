@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import ClientOnly from "@/components/clientOnly";
 import { useGenericContext } from "@/contexts/GenericContext";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { GenericCard } from "@/components/GenericCard";
 import UserSplitAmountCard from "@/components/UserSplitAmountCard";
-import { User } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { contractAddresses, contractAbi } from "@/constants/index";
 import { useAccount } from "wagmi";
@@ -53,10 +52,6 @@ export default function SplitBill() {
     setHasMounted(true);
   }, []);
 
-  const onGenerateSharinLinks = () => {
-    console.log("Generate sharing links");
-  };
-
   const getSplittedAmount = () => {
     return totalAmount / (checkedContacts.length + 1);
   };
@@ -81,9 +76,9 @@ export default function SplitBill() {
   if (!hasMounted) return null;
   return (
     <ClientOnly>
-      <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <main className="flex flex-col items-center justify-center px-20 text-center">
-          <h1 className="text-6xl font-bold mb-6">SLICE</h1>
+      <div className="flex flex-col items-center min-h-screen py-2">
+        <main className="flex flex-col items-center px-20 text-center">
+          <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo" />
           <Card className="w-[380px]">
             <CardHeader>
               <CardTitle>Slicing 🔪</CardTitle>
@@ -110,22 +105,20 @@ export default function SplitBill() {
         <div className="flex items-center justify-center text-center mt-3">
           <GenericCard
             title={"Review 🔍"}
+            subtitle={`Your slice is $${getSplittedAmount()}`}
             footerText={sharingLinks ? "Edit" : "Confirm"}
             footerClick={() => setSharingLinks(!sharingLinks)}
           >
             <div>
               <Separator className="mb-6" />
-              <UserSplitAmountCard contactName="Myself" amount={getSplittedAmount()} />
               {checkedContacts.map((contactName, index) => (
-                <>
-                  <UserSplitAmountCard
-                    key={index}
-                    contactName={contactName}
-                    amount={getSplittedAmount()}
-                    sharingLinks={sharingLinks}
-                    onCopyShareLink={onCopyShareLink}
-                  />
-                </>
+                <UserSplitAmountCard
+                  key={index}
+                  contactName={contactName}
+                  amount={getSplittedAmount()}
+                  sharingLinks={sharingLinks}
+                  onCopyShareLink={onCopyShareLink}
+                />
               ))}
               <Separator className="mb-6" />
             </div>
