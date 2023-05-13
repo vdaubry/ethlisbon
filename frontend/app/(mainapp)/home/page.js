@@ -61,8 +61,10 @@ export default function Home() {
     const safeAuthKit = await getSafeAuth();
     const provider = new ethers.providers.Web3Provider(safeAuthKit.getProvider());
     const signer = provider.getSigner();
+    const signerAddress = await signer.getAddress();
+    console.log("Get safeAddress for signer: ", signerAddress);
     const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-    const safeAddress = await contract.getSafe();
+    const safeAddress = await contract.getSafe(signerAddress);
 
     return safeAddress;
   };

@@ -28,6 +28,7 @@ import getSafeAuth from "@/utils/safeAuth";
 import { GenericCard } from "@/components/GenericCard";
 import { useNetwork, useAccount, useContract, useSigner } from "wagmi";
 import { contractAddresses, contractAbi } from "@/constants/index";
+import { GelatoRelay } from "@gelatonetwork/relay-sdk";
 
 const CreateSafe = () => {
 	const [safeAuthSignInResponse, setSafeAuthSignInResponse] =
@@ -46,14 +47,45 @@ const CreateSafe = () => {
 		const CHAIN_ID = 5;
 		const contractAddress = contractAddresses[CHAIN_ID]["contract"];
 
+		console.log("contractAddress: ", contractAddress);
+
 		const safeAuthKit = await getSafeAuth();
 		const provider = new ethers.providers.Web3Provider(
 			safeAuthKit.getProvider()
 		);
 		const signer = provider.getSigner();
-		console.log("Set safeAddress for signer: ", await signer.getAddress());
+		const signerAddress = await signer.getAddress();
+		console.log("Set safeAddress for signer: ", signerAddress);
 		const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-		await contract.setSafe(safeAddress);
+		const { data } = await contract.populateTransaction.setSafe(
+			safeAddress,
+			signerAddress
+		);
+
+		console.log("safeAddress: ", safeAddress);
+		console.log("data: ", data);
+
+		const request = {
+			chainId: CHAIN_ID,
+			target: contractAddress,
+			data: data,
+			gasLimit: "100000",
+			isSponsored: true,
+			user: await signer.getAddress(),
+		};
+
+		const relayKit = new GelatoRelay();
+
+		console.log("Gelato initialized - sending sponsored call");
+
+		const response = await relayKit.sponsoredCall(
+			request,
+			"JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_"
+		);
+
+		console.log(
+			`Set Safer in contract Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
+		);
 	};
 
 	useEffect(() => {

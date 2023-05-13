@@ -20,8 +20,8 @@ if (!developmentChains.includes(network.name)) {
     describe("setSafe", async () => {
       it("should set safe", async () => {
         const safeAddress = "0x355bF8c2080B994c0409c45292e1b328bE82A242";
-        await contract.setSafe(safeAddress);
-        expect(await contract.getSafe()).to.equal(safeAddress);
+        await contract.setSafe(safeAddress, deployer);
+        expect(await contract.getSafe(deployer)).to.equal(safeAddress);
       });
     });
   });
