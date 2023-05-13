@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 import ClientOnly from "@/components/clientOnly";
 import { useGenericContext } from "@/contexts/GenericContext";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { GenericCard } from "@/components/GenericCard";
 import UserSplitAmountCard from "@/components/UserSplitAmountCard";
-import { User } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 export default function SplitBill() {
@@ -24,19 +22,9 @@ export default function SplitBill() {
     setCheckedContacts(["foo", "bar"]);
   }
 
-  /**************************************
-   *
-   * Render UI
-   *
-   **************************************/
-
   useEffect(() => {
     setHasMounted(true);
   }, []);
-
-  const onGenerateSharinLinks = () => {
-    console.log("Generate sharing links");
-  };
 
   const getSplittedAmount = () => {
     return totalAmount / (checkedContacts.length + 1);
@@ -90,22 +78,20 @@ export default function SplitBill() {
         <div className="flex items-center justify-center text-center mt-3">
           <GenericCard
             title={"Review 🔍"}
+            subtitle={`Your slice is $${getSplittedAmount()}`}
             footerText={sharingLinks ? "Edit" : "Confirm"}
             footerClick={() => setSharingLinks(!sharingLinks)}
           >
             <div>
               <Separator className="mb-6" />
-              <UserSplitAmountCard contactName="Myself" amount={getSplittedAmount()} />
               {checkedContacts.map((contactName, index) => (
-                <>
-                  <UserSplitAmountCard
-                    key={index}
-                    contactName={contactName}
-                    amount={getSplittedAmount()}
-                    sharingLinks={sharingLinks}
-                    onCopyShareLink={onCopyShareLink}
-                  />
-                </>
+                <UserSplitAmountCard
+                  key={index}
+                  contactName={contactName}
+                  amount={getSplittedAmount()}
+                  sharingLinks={sharingLinks}
+                  onCopyShareLink={onCopyShareLink}
+                />
               ))}
               <Separator className="mb-6" />
             </div>

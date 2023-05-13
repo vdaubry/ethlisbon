@@ -46,6 +46,7 @@ export default function Split() {
 
       const response = await safeAuthKit.signIn();
       setUserAddress(response.eoa);
+      setCheckedContacts([]);
     })();
   }, []);
 
@@ -69,7 +70,7 @@ export default function Split() {
 
   const onCheckedChange = async (contactName, checked) => {
     if (checked) {
-      setCheckedContacts([...checkedContacts, contactName]);
+      setCheckedContacts(prev => [...prev, contactName]);
     } else {
       setCheckedContacts(checkedContacts.filter(name => name !== contactName));
     }
