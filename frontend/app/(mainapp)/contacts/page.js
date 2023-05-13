@@ -32,7 +32,7 @@ export default function Split() {
   const [safeAuth, setSafeAuth] = useState();
   const [userAddress, setUserAddress] = useState(null);
   const { address, isConnected } = useAccount();
-  const { data: ensName } = useEnsName({ userAddress });
+  const { data: ensName } = useEnsName({ address: userAddress });
 
   // local state
   const [searchQuery, setSearchQuery] = useState(null);
