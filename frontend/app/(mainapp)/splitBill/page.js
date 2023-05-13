@@ -63,6 +63,7 @@ export default function SplitBill() {
     <ClientOnly>
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <main className="flex flex-col items-center justify-center px-20 text-center">
+          <h1 className="text-6xl font-bold mb-6">SLICE</h1>
           <Card className="w-[380px]">
             <CardHeader>
               <CardTitle>Slicing 🔪</CardTitle>
