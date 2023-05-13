@@ -260,7 +260,7 @@ export default function Pay() {
   const parseAmount = () => {
     if (!amountInCents) return "$0.00";
 
-    return `$${amountInCents.slice(0, -2)}.${amountInCents.slice(-2)}`;
+    return `${amountInCents.slice(0, -2)}.${amountInCents.slice(-2)} USDC`;
   };
 
   return (
