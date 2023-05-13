@@ -51,7 +51,7 @@ export default function SplitBill() {
   return (
     <ClientOnly>
       <div className="flex flex-col items-center min-h-screen py-2">
-        <main className="flex flex-col items-center flex-1 px-20 text-center">
+        <main className="flex flex-col items-center px-20 text-center">
           <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo" />
           <Card className="w-[380px]">
             <CardHeader>
