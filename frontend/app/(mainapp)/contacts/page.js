@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAccount, useEnsName } from "wagmi";
@@ -9,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GenericCard } from "@/components/GenericCard";
 import { Switch } from "@/components/ui/switch";
+
+import { useCheckedContacts } from "@/contexts/CheckedContactsContext";
 
 const ContactList = [
   { name: "John Doe", phone: "555-555-5555" },
@@ -24,6 +27,7 @@ const ContactList = [
 ];
 
 export default function Split() {
+  const router = useRouter();
   // web3
   const [safeAuth, setSafeAuth] = useState();
   const [userAddress, setUserAddress] = useState(null);
@@ -32,6 +36,9 @@ export default function Split() {
 
   // local state
   const [searchQuery, setSearchQuery] = useState(null);
+
+  // Shared state
+  const { checkedContacts, setCheckedContacts } = useCheckedContacts([]);
 
   useEffect(() => {
     (async () => {
@@ -55,24 +62,30 @@ export default function Split() {
     return `${userAddress.slice(0, 5)}...${userAddress.slice(-3)}`;
   };
 
-  const onCreateNewContact = () => {
-    // @TODO: Missing implementation for this section
-    console.log("create new contact");
+  const onSplitBill = () => {
+    router.push("/splitBill");
   };
 
   const name = () => ensName || prettyfyUserAddress();
 
+  const onCheckedChange = async (contactName, checked) => {
+    if (checked) {
+      setCheckedContacts([...checkedContacts, contactName]);
+    } else {
+      setCheckedContacts(checkedContacts.filter(name => name !== contactName));
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <main className="flex flex-col items-center justify-center flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold mb-6">SLICE</h1>
+    <div className="flex items-center justify-center py-2">
+      <main className="flex items-center justify-center text-center">
         <GenericCard
           title={name() || "Welcome"}
           subtitle={"Add your friends to split with"}
-          footerText={"Create New Contact"}
-          footerClick={() => onCreateNewContact()}
+          footerText={"Split the bill"}
+          footerClick={() => onSplitBill()}
         >
-          <div className="flex w-full max-w-sm items-center space-x-2">
+          <div className="flex w-3 max-w-sm items-center space-x-2">
             <Input
               type="email"
               placeholder="Search for friends.."
@@ -89,7 +102,12 @@ export default function Split() {
                   <p contact="text-sm font-medium leading-none">{contact.name}</p>
                   <p className="text-sm text-muted-foreground">{contact.phone}</p>
                 </div>
-                <Switch id={`${contact.name}`} />
+                <Switch
+                  id={`${contact.name}`}
+                  onCheckedChange={checked => {
+                    onCheckedChange(contact.name, checked);
+                  }}
+                />
               </div>
             ))}
           </div>
