@@ -38,10 +38,37 @@ module.exports = {
       saveDeployments: true,
       chainId: 5,
     },
+    polygon: {
+      url: "https://polygon-rpc.com/",
+      accounts: [PRIVATE_KEY],
+      saveDeployments: true,
+      chainId: 137,
+    },
+    optimisticEthereum: {
+      url: "https://mainnet.optimism.io",
+      accounts: [PRIVATE_KEY],
+      saveDeployments: true,
+      chainId: 10,
+    },
+    scrollAlphaTestnet: {
+      url: "https://alpha-rpc.scroll.io/l2",
+      accounts: [PRIVATE_KEY],
+      saveDeployments: true,
+      chainId: 534353,
+    },
+    gnosisChain: {
+      url: "https://rpc.gnosischain.com",
+      accounts: [PRIVATE_KEY],
+      saveDeployments: true,
+      chainId: 100,
+    },
   },
   etherscan: {
     apiKey: {
       goerli: ETHERSCAN_API_KEY,
+      polygon: "GRWRVBB9MGTWI599KUSPJNS5ZXW97MA3Z3",
+      optimisticEthereum: "9CEXUK2XSCQ48E31P11QAHAIY376YXIHNF",
+      gnosis: "X56R4A6ZHP2Y88U68XP6NZ3Q73Y233FD7R",
     },
   },
   gasReporter: {

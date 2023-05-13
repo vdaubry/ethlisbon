@@ -1,0 +1,119 @@
+{
+  "address": "0xc94650e4857Da3d0ea612e079a8B3F7979e5F62A",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "safe",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "signer",
+          "type": "address"
+        }
+      ],
+      "name": "SafeSet",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "signer",
+          "type": "address"
+        }
+      ],
+      "name": "getSafe",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "safe",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "signer",
+          "type": "address"
+        }
+      ],
+      "name": "setSafe",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x9a5c6b0a1894acce78f817a8098e6987ab90dc91765840378becb04a22a08e41",
+  "receipt": {
+    "to": null,
+    "from": "0xCe2289B87b80457AC7f07352b25D2576BD6D88D8",
+    "contractAddress": "0xc94650e4857Da3d0ea612e079a8B3F7979e5F62A",
+    "transactionIndex": 0,
+    "gasUsed": "219518",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x4925b6171864350f7fb1366dad3e273c620a3a56a445463ca1a9149961ecf231",
+    "transactionHash": "0x9a5c6b0a1894acce78f817a8098e6987ab90dc91765840378becb04a22a08e41",
+    "logs": [],
+    "blockNumber": 27930033,
+    "cumulativeGasUsed": "219518",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "bd80ea679b4d77c19bf10208556ee9ff",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"safe\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"}],\"name\":\"SafeSet\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"}],\"name\":\"getSafe\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"safe\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"}],\"name\":\"setSafe\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Slice.sol\":\"Slice\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/Slice.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.17;\\n\\ncontract Slice {\\n    mapping(address => address) eoaToSafe;\\n\\n    event SafeSet(address safe, address signer);\\n\\n    function setSafe(address safe, address signer) public {\\n        eoaToSafe[signer] = safe;\\n        emit SafeSet(safe, signer);\\n    }\\n\\n    function getSafe(address signer) public view returns (address) {\\n        return eoaToSafe[signer];\\n    }\\n}\\n\",\"keccak256\":\"0x12a68a9631c90befa5d8828f65a9b77025a551f8ad9f0761d2047d59f2b0da47\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610302806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c80633ba288371461003b578063894adc6514610057575b600080fd5b6100556004803603810190610050919061020c565b610087565b005b610071600480360381019061006c919061024c565b610141565b60405161007e9190610288565b60405180910390f35b816000808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055507f97e5c9e353e16a42456e2f1291ed0a755c98729102ec091d8078f69d2d6547db82826040516101359291906102a3565b60405180910390a15050565b60008060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050919050565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006101d9826101ae565b9050919050565b6101e9816101ce565b81146101f457600080fd5b50565b600081359050610206816101e0565b92915050565b60008060408385031215610223576102226101a9565b5b6000610231858286016101f7565b9250506020610242858286016101f7565b9150509250929050565b600060208284031215610262576102616101a9565b5b6000610270848285016101f7565b91505092915050565b610282816101ce565b82525050565b600060208201905061029d6000830184610279565b92915050565b60006040820190506102b86000830185610279565b6102c56020830184610279565b939250505056fea26469706673582212207dfac2815c2e5ae3baece6fb28b484936caccae841880866b11994c67ca4181064736f6c63430008130033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c80633ba288371461003b578063894adc6514610057575b600080fd5b6100556004803603810190610050919061020c565b610087565b005b610071600480360381019061006c919061024c565b610141565b60405161007e9190610288565b60405180910390f35b816000808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055507f97e5c9e353e16a42456e2f1291ed0a755c98729102ec091d8078f69d2d6547db82826040516101359291906102a3565b60405180910390a15050565b60008060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050919050565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006101d9826101ae565b9050919050565b6101e9816101ce565b81146101f457600080fd5b50565b600081359050610206816101e0565b92915050565b60008060408385031215610223576102226101a9565b5b6000610231858286016101f7565b9250506020610242858286016101f7565b9150509250929050565b600060208284031215610262576102616101a9565b5b6000610270848285016101f7565b91505092915050565b610282816101ce565b82525050565b600060208201905061029d6000830184610279565b92915050565b60006040820190506102b86000830185610279565b6102c56020830184610279565b939250505056fea26469706673582212207dfac2815c2e5ae3baece6fb28b484936caccae841880866b11994c67ca4181064736f6c63430008130033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 145,
+        "contract": "contracts/Slice.sol:Slice",
+        "label": "eoaToSafe",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_address,t_address)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_address)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => address)",
+        "numberOfBytes": "32",
+        "value": "t_address"
+      }
+    }
+  }
+}
