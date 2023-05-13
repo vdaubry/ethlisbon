@@ -4,11 +4,11 @@ pragma solidity ^0.8.17;
 contract Slice {
     mapping(address => address) eoaToSafe;
 
-    function setSafe(address safe) public {
-        eoaToSafe[msg.sender] = safe;
+    function setSafe(address safe, address signer) public {
+        eoaToSafe[signer] = safe;
     }
 
-    function getSafe() public view returns (address) {
-        return eoaToSafe[msg.sender];
+    function getSafe(address signer) public view returns (address) {
+        return eoaToSafe[signer];
     }
 }

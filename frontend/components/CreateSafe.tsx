@@ -26,8 +26,10 @@ import {
 } from "@/utils/safe-core/index";
 import { OperationType, SafeVersion } from "@safe-global/safe-core-sdk-types";
 import getSafeAuth from "@/utils/safeAuth";
-import { useGenericContext } from "@/contexts/GenericContext";
 import { GenericCard } from "@/components/GenericCard";
+import { useNetwork, useAccount, useContract, useSigner } from "wagmi";
+import { contractAddresses, contractAbi } from "@/constants/index";
+import { GelatoRelay } from "@gelatonetwork/relay-sdk";
 
 const CreateSafe = () => {
 	const [safeAuthSignInResponse, setSafeAuthSignInResponse] =
@@ -36,10 +38,56 @@ const CreateSafe = () => {
 	const [userAddress, setUserAddress] = useState<string | null>(null);
 	const router = useRouter();
 
+	const { chain } = useNetwork();
+	const { address: account } = useAccount();
+
 	const safeVersion: SafeVersion = "1.3.0";
 
-	// Shared state
-	const { safeAddress, setSafeAddress } = useGenericContext();
+	const setSafe = async (safeAddress) => {
+		console.log("safeAddress: ", safeAddress);
+		const CHAIN_ID = 5;
+		const contractAddress = contractAddresses[CHAIN_ID]["contract"];
+
+		console.log("contractAddress: ", contractAddress);
+
+		const safeAuthKit = await getSafeAuth();
+		const provider = new ethers.providers.Web3Provider(
+			safeAuthKit.getProvider()
+		);
+		const signer = provider.getSigner();
+		const signerAddress = await signer.getAddress();
+		console.log("Set safeAddress for signer: ", signerAddress);
+		const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+		const { data } = await contract.populateTransaction.setSafe(
+			safeAddress,
+			signerAddress
+		);
+
+		console.log("safeAddress: ", safeAddress);
+		console.log("data: ", data);
+
+		const request = {
+			chainId: CHAIN_ID,
+			target: contractAddress,
+			data: data,
+			gasLimit: "100000",
+			isSponsored: true,
+			user: await signer.getAddress(),
+		};
+
+		const relayKit = new GelatoRelay();
+
+		console.log("Gelato initialized - sending sponsored call");
+
+		const response = await relayKit.sponsoredCall(
+			request,
+			"JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_"
+		);
+
+		console.log(
+			`Set Safer in contract Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
+		);
+	};
 
 	useEffect(() => {
 		(async () => {
@@ -83,13 +131,13 @@ const CreateSafe = () => {
 
 		console.log("getProxyFactoryContract: ", safeProxyFactoryContract);
 
-		const safeAddress = await predictSafeAddress({
+		const safeAddress_ = await predictSafeAddress({
 			ethAdapter: ethAdapter,
 			safeAccountConfig,
 			safeDeploymentConfig,
 		});
 
-		console.log("predictSafeAddres: ", safeAddress);
+		console.log("predictSafeAddres: ", safeAddress_);
 
 		const safeContract = await getSafeContract({
 			ethAdapter: ethAdapter,
@@ -155,13 +203,14 @@ const CreateSafe = () => {
 			`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response1.taskId}`
 		);
 
-		setSafeAddress(safeAddress);
+		await setSafe(safeAddress_);
 		router.push("/contacts");
 	};
+
 	return (
-    <div className="flex flex-col items-center min-h-screen py-2">
-      <main className="flex flex-col items-center flex-1 px-20 text-center">
-        <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo"/>
+		<div className="flex flex-col items-center justify-center py-2">
+			<main className="flex flex-col items-center justify-center text-center">
+				<h1 className="text-6xl font-bold mb-6">SLICE</h1>
 				<div className="flex items-center justify-center text-center mt-3">
 					<GenericCard
 						className={""}
@@ -170,9 +219,7 @@ const CreateSafe = () => {
 						footerText={"Create Safe"}
 						footerClick={() => createSafe()}
 					>
-						<div>
-							<p>Foo</p>
-						</div>
+						<div></div>
 					</GenericCard>
 				</div>
 			</main>

@@ -10,11 +10,15 @@ import { Input } from "@/components/ui/input";
 import { GenericCard } from "@/components/GenericCard";
 import UserSplitAmountCard from "@/components/UserSplitAmountCard";
 import { Separator } from "@/components/ui/separator";
+import { contractAddresses, contractAbi } from "@/constants/index";
+import { useAccount } from "wagmi";
+import getSafeAuth from "@/utils/safeAuth";
+import { ethers } from "ethers";
 
 export default function SplitBill() {
   const [hasMounted, setHasMounted] = useState(false);
   const { checkedContacts, setCheckedContacts } = useGenericContext([]);
-  const { safeAddress } = useGenericContext("");
+  const { address, isConnected } = useAccount();
 
   const [totalAmount, setTotalAmount] = useState(30);
   const [sharingLinks, setSharingLinks] = useState(false);
@@ -22,6 +26,27 @@ export default function SplitBill() {
   if (checkedContacts.length === 0) {
     setCheckedContacts(["foo", "bar"]);
   }
+
+  const getSafeAddressFromContract = async () => {
+    const CHAIN_ID = 5;
+    const contractAddress = contractAddresses[CHAIN_ID]["contract"];
+
+    const safeAuthKit = await getSafeAuth();
+    const provider = new ethers.providers.Web3Provider(safeAuthKit.getProvider());
+    const signer = provider.getSigner();
+    const signerAddress = await signer.getAddress();
+    console.log("Get safeAddress for signer: ", signerAddress);
+    const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+    const safeAddress = await contract.getSafe(signerAddress);
+
+    return safeAddress;
+  };
+
+  /**************************************
+   *
+   * Render UI
+   *
+   **************************************/
 
   useEffect(() => {
     setHasMounted(true);
@@ -31,7 +56,8 @@ export default function SplitBill() {
     return totalAmount / (checkedContacts.length + 1);
   };
 
-  const getShareLink = () => {
+  const getShareLink = async () => {
+    const safeAddress = await getSafeAddressFromContract();
     const isProd = process.env.VERCEL_ENV === "production";
 
     const params = "?safeAddress=" + safeAddress + "&amount=" + getSplittedAmount() * 100;
@@ -44,7 +70,7 @@ export default function SplitBill() {
   };
 
   const onCopyShareLink = async () => {
-    await navigator.clipboard.writeText(getShareLink());
+    await navigator.clipboard.writeText(await getShareLink());
   };
 
   if (!hasMounted) return null;

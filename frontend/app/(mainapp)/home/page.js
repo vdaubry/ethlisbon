@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount, useConnect, useEnsName } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { ADAPTER_EVENTS } from "@web3auth/base";
 import getSafeAuth from "@/utils/safeAuth";
@@ -11,6 +11,9 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GenericCard } from "@/components/GenericCard";
 import Image from "next/image";
+
+import { contractAddresses, contractAbi } from "@/constants/index";
+import { ethers } from "ethers";
 
 const connectedHandler = data => console.log("CONNECTED", data);
 const disconnectedHandler = data => console.log("DISCONNECTED", data);
@@ -26,6 +29,7 @@ export default function Home() {
     web3: false,
     web2: false
   });
+  const [eoaAddress, setEoaAddress] = useState(address);
 
   useEffect(() => {
     (async () => {
@@ -45,19 +49,47 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (address) {
-      router.push("/contacts");
+    if (eoaAddress) {
+      console.log("perform redirect");
+      performRedirect();
     }
   }, [address, isConnected]);
+
+  const getSafeAddressFromContract = async () => {
+    const CHAIN_ID = 5;
+    const contractAddress = contractAddresses[CHAIN_ID]["contract"];
+
+    const safeAuthKit = await getSafeAuth();
+    const provider = new ethers.providers.Web3Provider(safeAuthKit.getProvider());
+    const signer = provider.getSigner();
+    const signerAddress = await signer.getAddress();
+    console.log("Get safeAddress for signer: ", signerAddress);
+    const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+    const safeAddress = await contract.getSafe(signerAddress);
+
+    return safeAddress;
+  };
+
+  const performRedirect = async () => {
+    const safeAddress = await getSafeAddressFromContract();
+    console.log("safeAddress", safeAddress);
+    const emptyAddress = /^0x0+$/.test(safeAddress);
+
+    if (emptyAddress) {
+      router.push("/safe");
+    } else {
+      router.push("/contacts");
+    }
+  };
 
   const socialLogin = async () => {
     if (!safeAuth) return;
     setLoading(prev => ({ ...prev, web2: true }));
 
     const response = await safeAuth.signIn();
-    if (response.eoa) {
-      router.push("/contacts");
-    }
+
+    await setEoaAddress(response.eoa);
+    await performRedirect();
   };
 
   const web3Login = async () => {
