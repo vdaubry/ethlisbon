@@ -44,7 +44,7 @@ export default function Home() {
 
   useEffect(() => {
     if (address) {
-      router.push("/home/split");
+      router.push("/contacts");
     }
   }, [address, isConnected]);
 
@@ -54,7 +54,7 @@ export default function Home() {
 
     const response = await safeAuth.signIn();
     if (response.eoa) {
-      router.push("/home/split");
+      router.push("/contacts");
     }
   };
 
