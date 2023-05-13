@@ -8,7 +8,7 @@ module.exports = async (hre) => {
   await updateAbi();
 };
 
-const CONTRACT_NAME = "MyToken";
+const CONTRACT_NAME = "Slice";
 
 const updateAddresses = async () => {
   const contract = await ethers.getContract(CONTRACT_NAME);

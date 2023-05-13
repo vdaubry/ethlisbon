@@ -8,7 +8,7 @@ if (!developmentChains.includes(network.name)) {
   describe("Contract", () => {
     let deployer;
 
-    const CONTRACT_NAME = "MyToken";
+    const CONTRACT_NAME = "Slice";
 
     beforeEach(async () => {
       await deployments.fixture(["all"]);
@@ -17,25 +17,11 @@ if (!developmentChains.includes(network.name)) {
       contract = await ethers.getContract(CONTRACT_NAME, deployer);
     });
 
-    describe("constructor", async () => {
-      const expectedTotalSupply = ethers.utils.parseUnits(
-        (150 * 10 ** 9).toString(),
-        18
-      ); // 150 billion (18 decimals)
-
-      it("should update total supply", async () => {
-        const totalSupply = await contract.totalSupply();
-        expect(totalSupply).to.equal(expectedTotalSupply);
-      });
-
-      it("should update name", async () => {
-        const name = await contract.name();
-        expect(name).to.equal("My Token");
-      });
-
-      it("should update symbol", async () => {
-        const symbol = await contract.symbol();
-        expect(symbol).to.equal("MYT");
+    describe("setSafe", async () => {
+      it("should set safe", async () => {
+        const safeAddress = "0xCe2289B87b80457AC7f07352b25D2576BD6D88D8";
+        await contract.setSafe(safeAddress);
+        expect(await contract.getSafe()).to.equal(safeAddress);
       });
     });
   });

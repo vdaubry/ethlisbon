@@ -22,10 +22,9 @@ module.exports = async (hre) => {
   log("---------------------------------");
   log(`Deploy contract with owner : ${deployer}`);
 
-  const CONTRACT_NAME = "MyToken";
+  const CONTRACT_NAME = "Slice";
 
-  const tokenSupply = ethers.utils.parseUnits((150 * 10 ** 9).toString(), 18); // 150 billion (18 decimals)
-  const arguments = [deployer, tokenSupply];
+  const arguments = [];
   await deploy(CONTRACT_NAME, {
     from: deployer,
     args: arguments,
