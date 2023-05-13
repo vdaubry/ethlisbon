@@ -46,6 +46,7 @@ const CreateSafe = () => {
 	// localState for Name + Phone number
 	const [name, setName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	const safeVersion: SafeVersion = "1.3.0";
 
@@ -106,6 +107,7 @@ const CreateSafe = () => {
 	}, []);
 
 	const createSafe = async () => {
+		setIsLoading(true);
 		const provider = new ethers.providers.Web3Provider(safeAuth.getProvider());
 		const signer = provider.getSigner();
 
@@ -211,6 +213,7 @@ const CreateSafe = () => {
 
 		await setSafe(safeAddress_);
 		router.push("/verification");
+		setIsLoading(false);
 	};
 
 	return (
@@ -224,6 +227,7 @@ const CreateSafe = () => {
 						subtitle={"During the registration we'll create a safe for you to safely receive your funds"}
 						footerText={"Register"}
 						footerClick={() => createSafe()}
+						loadingFooterButton={isLoading}
 					>
 						<Label htmlFor="name-input" className="text-left">Name</Label>
 						<Input
