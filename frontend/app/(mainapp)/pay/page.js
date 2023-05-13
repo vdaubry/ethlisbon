@@ -104,6 +104,7 @@ export default function Pay() {
 
   useEffect(() => {
     if (relayKitUrl && !paymentInProgress) {
+      console.log("TRACKING STARTED");
       setPaymentInProgress(true);
       trackRelayProgress();
     }
@@ -111,9 +112,12 @@ export default function Pay() {
 
   const trackRelayProgress = async () => {
     const response = await fetch(relayKitUrl);
+    console.log(response);
     const data = await response.json();
 
-    if (data.task.taskState === "ExecSuccess") {
+    console.log(data);
+
+    if (data?.task?.taskState === "ExecSuccess") {
       console.log("Relay Transaction Executed");
       setRelayKitUrl(null);
       setPaymentInProgress(false);
@@ -158,7 +162,7 @@ export default function Pay() {
 
       const response = await relayKit.sponsoredCall(request, "JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_");
 
-      setRelayKitUrl(`https://relay.gelato.network/?requestId=${response.requestId}`);
+      setRelayKitUrl(`https://relay.gelato.digital/tasks/status/${response.taskId}`);
       console.log(`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`);
     } else {
       // if it doesn't we do the web3 way with a regular transfer
