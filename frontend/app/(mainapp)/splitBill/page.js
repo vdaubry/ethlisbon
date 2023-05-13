@@ -10,11 +10,13 @@ import { Input } from "@/components/ui/input";
 import { GenericCard } from "@/components/GenericCard";
 import UserSplitAmountCard from "@/components/UserSplitAmountCard";
 import { User } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 export default function SplitBill() {
   const [hasMounted, setHasMounted] = useState(false);
   const { checkedContacts, setCheckedContacts } = useGenericContext([]);
-  const { safeAddress, setSafeAddress } = useGenericContext("");
+  const { safeAddress } = useGenericContext("");
+
   const [totalAmount, setTotalAmount] = useState(30);
   const [sharingLinks, setSharingLinks] = useState(false);
 
@@ -63,14 +65,13 @@ export default function SplitBill() {
         <main className="flex flex-col items-center justify-center px-20 text-center">
           <Card className="w-[380px]">
             <CardHeader>
-              <CardTitle>Describe your bill</CardTitle>
-              <CardDescription>Total amount</CardDescription>
+              <CardTitle>Slicing 🔪</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
               <div>
                 <div className="mb-4 flex justify-between items-center pb-4 last:mb-0 last:pb-0">
                   <div className="space-y-1">
-                    <p contact="text-sm font-medium leading-none">Total bill amount</p>
+                    <p contact="text-sm font-medium leading-none">Total Amount to Slice</p>
                   </div>
 
                   <Input
@@ -87,22 +88,25 @@ export default function SplitBill() {
 
         <div className="flex items-center justify-center text-center mt-3">
           <GenericCard
-            title={"Split the bill"}
-            subtitle={"Choose an amount for each person"}
-            footerText={sharingLinks ? "Edit splitted amounts" : "Get sharing links"}
+            title={"Review 🔍"}
+            footerText={sharingLinks ? "Edit" : "Confirm"}
             footerClick={() => setSharingLinks(!sharingLinks)}
           >
             <div>
+              <Separator className="mb-6" />
               <UserSplitAmountCard contactName="Myself" amount={getSplittedAmount()} />
               {checkedContacts.map((contactName, index) => (
-                <UserSplitAmountCard
-                  key={index}
-                  contactName={contactName}
-                  amount={getSplittedAmount()}
-                  sharingLinks={sharingLinks}
-                  onCopyShareLink={onCopyShareLink}
-                />
+                <>
+                  <UserSplitAmountCard
+                    key={index}
+                    contactName={contactName}
+                    amount={getSplittedAmount()}
+                    sharingLinks={sharingLinks}
+                    onCopyShareLink={onCopyShareLink}
+                  />
+                </>
               ))}
+              <Separator className="mb-6" />
             </div>
           </GenericCard>
         </div>

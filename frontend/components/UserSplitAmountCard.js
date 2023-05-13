@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const UserSplitAmountCard = ({ contactName, amount, sharingLinks, onCopyShareLink }) => {
   return (
-    <div className="mb-4 flex justify-between items-center pb-4 last:mb-0 last:pb-0">
+    <div className="mb-3 flex justify-between items-center pb-4 last:mb-0 last:pb-0">
       <User />
       <div className="space-y-1">
         <p contact="text-sm font-medium leading-none">{contactName}</p>
