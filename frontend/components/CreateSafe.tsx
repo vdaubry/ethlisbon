@@ -26,18 +26,8 @@ import {
 import { OperationType, SafeVersion } from "@safe-global/safe-core-sdk-types";
 import getSafeAuth from "@/utils/safeAuth";
 import { GenericCard } from "@/components/GenericCard";
-import {
-	useNetwork,
-	useAccount,
-	useContract,
-	useWaitForTransaction,
-	useSigner,
-} from "wagmi";
+import { useNetwork, useAccount, useContract, useSigner } from "wagmi";
 import { contractAddresses, contractAbi } from "@/constants/index";
-import {
-	handleFailureNotification,
-	handleSuccessNotification,
-} from "@/utils/notifications";
 
 const CreateSafe = () => {
 	const [safeAuthSignInResponse, setSafeAuthSignInResponse] =
@@ -51,58 +41,20 @@ const CreateSafe = () => {
 
 	const safeVersion: SafeVersion = "1.3.0";
 
-	const SetSafe = async (address) => {
-		/* Wagmi hooks*/
+	const setSafe = async (safeAddress) => {
+		console.log("safeAddress: ", safeAddress);
 		const CHAIN_ID = 5;
 		const contractAddress = contractAddresses[CHAIN_ID]["contract"];
 
-		const { data: signer } = useSigner();
-
-		const contract = useContract({
-			address: contractAddress,
-			abi: contractAbi,
-			chainId: CHAIN_ID,
-			signerOrProvider: signer,
-		});
-
-		const { setsafeData } = await contract
-			.connect(signer)
-			.populateTransaction.callStatic(contractAddress, safeAddress);
-
-		const request = {
-			chainId: CHAIN_ID,
-			target: contractAddress,
-			data: setsafeData,
-			gasLimit: "100000",
-			isSponsored: true,
-			user: await signer.getAddress(),
-		};
+		const safeAuthKit = await getSafeAuth();
+		const provider = new ethers.providers.Web3Provider(
+			safeAuthKit.getProvider()
+		);
+		const signer = provider.getSigner();
+		console.log("Set safeAddress for signer: ", await signer.getAddress());
+		const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+		await contract.setSafe(safeAddress);
 	};
-
-	// const { config } = usePrepareContractWrite({
-	// 	address: contractAddress,
-	// 	abi: contractAbi,
-	// 	functionName: "setSafe",
-	// 	args: [safeAddress],
-	// });
-
-	// const { data, write: setSafeOnContract } = useContractWrite({
-	// 	...config,
-	// 	onError(error) {
-	// 		handleFailureNotification(error.message);
-	// 	},
-	// });
-
-	// const { isLoading } = useWaitForTransaction({
-	// 	hash: data?.hash,
-	// 	confirmations: 1,
-	// 	onError(error) {
-	// 		handleFailureNotification(error.message);
-	// 	},
-	// 	onSuccess(data) {
-	// 		handleSuccessNotification();
-	// 	},
-	// });
 
 	useEffect(() => {
 		(async () => {
@@ -218,7 +170,7 @@ const CreateSafe = () => {
 			`Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response1.taskId}`
 		);
 
-		await SetSafe(safeAddress_);
+		await setSafe(safeAddress_);
 		router.push("/contacts");
 	};
 

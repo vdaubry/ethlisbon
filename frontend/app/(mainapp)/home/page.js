@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount, useConnect, useContract, useSigner } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { ADAPTER_EVENTS } from "@web3auth/base";
 import getSafeAuth from "@/utils/safeAuth";
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { GenericCard } from "@/components/GenericCard";
 
 import { contractAddresses, contractAbi } from "@/constants/index";
+import { ethers } from "ethers";
 
 const connectedHandler = data => console.log("CONNECTED", data);
 const disconnectedHandler = data => console.log("DISCONNECTED", data);
@@ -28,19 +29,6 @@ export default function Home() {
     web2: false
   });
   const [eoaAddress, setEoaAddress] = useState(address);
-
-  /* Wagmi hooks */
-  const CHAIN_ID = 5;
-  const contractAddress = contractAddresses[CHAIN_ID]["contract"];
-
-  const { data: signer } = useSigner();
-
-  const contract = useContract({
-    address: contractAddress,
-    abi: contractAbi,
-    chainId: CHAIN_ID,
-    signerOrProvider: signer
-  });
 
   useEffect(() => {
     (async () => {
@@ -66,14 +54,28 @@ export default function Home() {
     }
   }, [address, isConnected]);
 
-  const performRedirect = async () => {
-    console.log("EOA address", eoaAddress);
+  const getSafeAddressFromContract = async () => {
+    const CHAIN_ID = 5;
+    const contractAddress = contractAddresses[CHAIN_ID]["contract"];
 
-    const safeAddress = await contract.connect(signer).getSafe();
-    if (safeAddress) {
-      router.push("/contracts");
-    } else {
+    const safeAuthKit = await getSafeAuth();
+    const provider = new ethers.providers.Web3Provider(safeAuthKit.getProvider());
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+    const safeAddress = await contract.getSafe();
+
+    return safeAddress;
+  };
+
+  const performRedirect = async () => {
+    const safeAddress = await getSafeAddressFromContract();
+    console.log("safeAddress", safeAddress);
+    const emptyAddress = /^0x0+$/.test(safeAddress);
+
+    if (emptyAddress) {
       router.push("/safe");
+    } else {
+      router.push("/contacts");
     }
   };
 
