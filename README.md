@@ -13,10 +13,10 @@ Think Venmo or Cashapp, but decentralised and borderless.
 
 The tech stack is built with [Safe Core SDK](https://docs.safe.global/learn/safe-core/safe-core-account-abstraction-sdk)
 
-• Authentication : Web3auth
-• Smart Account Wallet : Safe
-• Fiat -> Crypto Onramp : Stripe
-• Gasless transactions : Gelato
+- Authentication : Web3auth
+- Smart Account Wallet : Safe
+- Fiat -> Crypto Onramp : Stripe
+- Gasless transactions : Gelato
 
 ## Demo
 
