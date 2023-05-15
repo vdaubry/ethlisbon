@@ -8,15 +8,8 @@ async function main() {
 
 async function getBalance() {
   const { deployer } = await getNamedAccounts();
-
-  console.log(`Deployer: ${deployer}`);
-
   const contract = await ethers.getContract("MyToken", deployer);
-
-  console.log(`Contract address: ${vestingToken.address}`);
-
   const balance = await contract.balanceOf(deployer);
-  console.log(`Got ${balance.toString()} tokens`);
 }
 
 main()

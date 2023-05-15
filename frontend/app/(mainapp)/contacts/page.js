@@ -17,13 +17,10 @@ import { useGenericContext } from "@/contexts/GenericContext";
 const ContactList = [
   { name: "Filipe Macedo", phone: "555-555-5555" },
   { name: "Francisco Leal", phone: "444-444-4444" },
-  // { name: "Tolga Dizmen", phone: "333-333-3333" },
   { name: "Vincent Daubry", phone: "222-222-2222" },
   { name: "Pedro Pereira", phone: "666-666-6666" },
   { name: "Vitalik", phone: "777-777-7777" },
   { name: "Nuno Reis", phone: "888-888-8888" }
-  // { name: "Harry Wilson", phone: "999-999-9999" },
-  // { name: "Ivy Thomas", phone: "000-000-0000" }
 ];
 
 export default function Split() {

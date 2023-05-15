@@ -35,7 +35,6 @@ export default function SplitBill() {
     const provider = new ethers.providers.Web3Provider(safeAuthKit.getProvider());
     const signer = provider.getSigner();
     const signerAddress = await signer.getAddress();
-    console.log("Get safeAddress for signer: ", signerAddress);
     const contract = new ethers.Contract(contractAddress, contractAbi, signer);
     const safeAddress = await contract.getSafe(signerAddress);
 

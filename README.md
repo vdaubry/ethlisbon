@@ -1,5 +1,29 @@
 # Slice
 
+Slice is a P2P payment system built on top of Account Abstraction.
+
+The code for this project was created during the ETH Glocal Lisbon 2023 Hackathon.
+
+This project won the Safe prize for best use case of the safe Core SDK.
+
+TODO: INSERT SAFE TWEET
+
+## What is Slice ?
+
+With Slice users can transfer money through Ethereum chain using only a credit card and their social account login (no browser extension).
+Think Venmo or Cashapp, but decentralised and borderless.
+
+The tech stack is built with [Safe Core SDK]()
+
+• Authentication : Web3auth
+• Smart Account Wallet : Safe
+• Fiat -> Crypto Onramp : Stripe
+• Gasless transactions : Gelato
+
+## Demo
+
+[Click here]() for the demo
+
 ## Account Abstraction
 
 ### Web3Auth
@@ -16,7 +40,7 @@ Leverage RelayKit to use Gelato for sponsoring transactions. [source](https://gi
 
 Leverage Safe OnrampKit for crypto onramp using Stripe [source](https://github.com/vdaubry/ethlisbon/blob/master/frontend/components/OnRamp.tsx#L15)
 
-## Smart Contracts
+## Smart Contracts adresses
 
 - Polygon [tweet](https://twitter.com/filmacedo/status/1657528792208777216)
   - Slice.sol => 0xc94650e4857da3d0ea612e079a8b3f7979e5f62a [Polygonscan](https://polygonscan.com/address/0xc94650e4857da3d0ea612e079a8b3f7979e5f62a)

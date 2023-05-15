@@ -10,7 +10,6 @@ import { ethers } from "ethers";
 import Safe, {
 	EthersAdapter,
 	getSafeContract,
-	SafeFactory,
 	predictSafeAddress,
 	getProxyFactoryContract,
 	encodeCreateProxyWithNonce,
@@ -51,11 +50,8 @@ const CreateSafe = () => {
 	const safeVersion: SafeVersion = "1.3.0";
 
 	const setSafe = async (safeAddress) => {
-		console.log("safeAddress: ", safeAddress);
 		const CHAIN_ID = 5;
 		const contractAddress = contractAddresses[CHAIN_ID]["contract"];
-
-		console.log("contractAddress: ", contractAddress);
 
 		const safeAuthKit = await getSafeAuth();
 		const provider = new ethers.providers.Web3Provider(
@@ -63,15 +59,11 @@ const CreateSafe = () => {
 		);
 		const signer = provider.getSigner();
 		const signerAddress = await signer.getAddress();
-		console.log("Set safeAddress for signer: ", signerAddress);
 		const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 		const { data } = await contract.populateTransaction.setSafe(
 			safeAddress,
 			signerAddress
 		);
-
-		console.log("safeAddress: ", safeAddress);
-		console.log("data: ", data);
 
 		const request = {
 			chainId: CHAIN_ID,
@@ -83,8 +75,6 @@ const CreateSafe = () => {
 		};
 
 		const relayKit = new GelatoRelay();
-
-		console.log("Gelato initialized - sending sponsored call");
 
 		const response = await relayKit.sponsoredCall(
 			request,
@@ -116,9 +106,6 @@ const CreateSafe = () => {
 			signerOrProvider: signer || provider,
 		});
 
-		const safeFactory = await SafeFactory.create({ ethAdapter: ethAdapter });
-		console.log("Safe created");
-
 		const safeAccountConfig = {
 			owners: [await signer.getAddress()],
 			threshold: 1,
@@ -137,22 +124,16 @@ const CreateSafe = () => {
 			safeVersion,
 		});
 
-		console.log("getProxyFactoryContract: ", safeProxyFactoryContract);
-
 		const safeAddress_ = await predictSafeAddress({
 			ethAdapter: ethAdapter,
 			safeAccountConfig,
 			safeDeploymentConfig,
 		});
 
-		console.log("predictSafeAddres: ", safeAddress_);
-
 		const safeContract = await getSafeContract({
 			ethAdapter: ethAdapter,
 			safeVersion: safeVersion,
 		});
-
-		console.log("getSafeContract: ", safeContract);
 
 		const relayPack = new GelatoRelayPack(
 			"JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_"
@@ -163,8 +144,6 @@ const CreateSafe = () => {
 			safeContract: safeContract,
 			safeAccountConfig: safeAccountConfig,
 		});
-
-		console.log("encodeSetupCallData: ", initializer);
 
 		const safeDeploymentTransaction = {
 			to: safeProxyFactoryContract.getAddress(),
@@ -177,24 +156,15 @@ const CreateSafe = () => {
 			operation: OperationType.Call,
 		};
 
-		console.log(
-			"safeDeploymentTransaction.encode: ",
-			safeDeploymentTransaction
-		);
-
 		const multiSendData = encodeMultiSendData([safeDeploymentTransaction]);
-		console.log("multiSendData: ", multiSendData);
-
 		const multiSendCallOnlyContract = await getMultiSendCallOnlyContract({
 			ethAdapter: ethAdapter,
 			safeVersion,
 		});
-		console.log("multiSendCallOnlyContract: ", multiSendCallOnlyContract);
 
 		const encodedTransaction = multiSendCallOnlyContract.encode("multiSend", [
 			multiSendData,
 		]);
-		console.log("encodedTransaction: ", encodedTransaction);
 
 		const chainId = await ethAdapter.getChainId();
 		const relayTransaction = {
@@ -217,35 +187,49 @@ const CreateSafe = () => {
 	};
 
 	return (
-    <div className="flex flex-col items-center min-h-screen py-6 ">
-      <main className="flex flex-col items-center flex-1 px-20 text-center">
-        <Image src={"/logo.svg"} width={600} height={200} className={"-mb-20"} alt="logo" />
+		<div className="flex flex-col items-center min-h-screen py-6 ">
+			<main className="flex flex-col items-center flex-1 px-20 text-center">
+				<Image
+					src={"/logo.svg"}
+					width={600}
+					height={200}
+					className={"-mb-20"}
+					alt="logo"
+				/>
 				<div className="flex items-center justify-center text-left mt-3">
 					<GenericCard
 						className={""}
 						title={"Set up your account"}
-						subtitle={"During the registration we'll create a safe for you to safely receive your funds"}
+						subtitle={
+							"During the registration we'll create a safe for you to safely receive your funds"
+						}
 						footerText={"Register"}
 						footerClick={() => createSafe()}
 						loadingFooterButton={isLoading}
 					>
-						<Label htmlFor="name-input" className="text-left">Name</Label>
+						<Label htmlFor="name-input" className="text-left">
+							Name
+						</Label>
 						<Input
-              type="text"
-              placeholder="John Doe"
+							type="text"
+							placeholder="John Doe"
 							id="name-input"
-              value={name}
-              onChange={e => setName(e.target.value)}
-            />
-						<Label htmlFor="phone-input" className="text-left">Phone Number</Label>
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+						/>
+						<Label htmlFor="phone-input" className="text-left">
+							Phone Number
+						</Label>
 						<Input
-              type="tel"
+							type="tel"
 							id="phone-input"
-              placeholder="+1 555 555 5555"
-              value={phoneNumber}
-              onChange={e => setPhoneNumber(e.target.value)}
-            />
-						<p className="text-sm text-muted-foreground text-left">Make sure to include your country code.</p>
+							placeholder="+1 555 555 5555"
+							value={phoneNumber}
+							onChange={(e) => setPhoneNumber(e.target.value)}
+						/>
+						<p className="text-sm text-muted-foreground text-left">
+							Make sure to include your country code.
+						</p>
 					</GenericCard>
 				</div>
 			</main>

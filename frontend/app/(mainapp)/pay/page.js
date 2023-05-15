@@ -104,7 +104,6 @@ export default function Pay() {
 
   useEffect(() => {
     if (relayKitUrl && !paymentInProgress) {
-      console.log("TRACKING STARTED");
       setPaymentInProgress(true);
       trackRelayProgress();
     }
@@ -112,13 +111,9 @@ export default function Pay() {
 
   const trackRelayProgress = async () => {
     const response = await fetch(relayKitUrl);
-    console.log(response);
     const data = await response.json();
 
-    console.log(data);
-
     if (data?.task?.taskState === "ExecSuccess") {
-      console.log("Relay Transaction Executed");
       setRelayKitUrl(null);
       setPaymentInProgress(false);
       setWeb3Success(true);
@@ -133,13 +128,8 @@ export default function Pay() {
   };
 
   const settleSplitWeb3 = async () => {
-    // @TODO - implement web3 flow
-    console.log("web3 flow");
-
     const localAmount = `${amountInCents.slice(0, -2)}.${amountInCents.slice(-2)}`;
     const amount = ethers.utils.parseUnits(localAmount, STABLE_DECIMALS);
-
-    // await contract.connect(signer).approve(PAY_CONTRACT_ADDRESS, amount);
 
     const allowance = await usdcContract.connect(signer).allowance(address, PAY_CONTRACT_ADDRESS);
 
@@ -157,9 +147,6 @@ export default function Pay() {
       };
 
       const relayKit = new GelatoRelay();
-
-      console.log("Gelato initialized - sending sponsored call");
-
       const response = await relayKit.sponsoredCall(request, "JcpsXW8SvuPmeHlMEwVgvW_JjzMiF8L72Qj17PQQ944_");
 
       setRelayKitUrl(`https://relay.gelato.digital/tasks/status/${response.taskId}`);
@@ -226,7 +213,6 @@ export default function Pay() {
 
   const stripeFlow = async () => {
     setLoading(prev => ({ ...prev, web2: true }));
-    console.log("stripe flow");
 
     await safeOnRamp.open({
       element: "#stripe-root",
@@ -244,13 +230,10 @@ export default function Pay() {
     });
 
     safeOnRamp.subscribe("onramp_ui_loaded", () => {
-      console.log("UI loaded");
       setLoading(prev => ({ ...prev, web2: false }));
     });
 
-    safeOnRamp.subscribe("onramp_session_updated", e => {
-      console.log("Session Updated", e.payload);
-    });
+    safeOnRamp.subscribe("onramp_session_updated", e => {});
   };
 
   const prettyfyUserAddress = () => {

@@ -50,7 +50,6 @@ export default function Home() {
 
   useEffect(() => {
     if (eoaAddress) {
-      console.log("perform redirect");
       performRedirect();
     }
   }, [address, isConnected]);
@@ -63,7 +62,6 @@ export default function Home() {
     const provider = new ethers.providers.Web3Provider(safeAuthKit.getProvider());
     const signer = provider.getSigner();
     const signerAddress = await signer.getAddress();
-    console.log("Get safeAddress for signer: ", signerAddress);
     const contract = new ethers.Contract(contractAddress, contractAbi, signer);
     const safeAddress = await contract.getSafe(signerAddress);
 
@@ -72,7 +70,6 @@ export default function Home() {
 
   const performRedirect = async () => {
     const safeAddress = await getSafeAddressFromContract();
-    console.log("safeAddress", safeAddress);
     const emptyAddress = /^0x0+$/.test(safeAddress);
 
     if (emptyAddress) {
