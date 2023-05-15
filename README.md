@@ -20,7 +20,7 @@ The tech stack is built with [Safe Core SDK](https://docs.safe.global/learn/safe
 
 ## Demo
 
-[Click here](https://ethlisbon-vdaubry.vercel.app/) for the demo
+[Click here](https://ethlisbon-vdaubry.vercel.app/home) for the demo
 
 ## Account Abstraction
 
