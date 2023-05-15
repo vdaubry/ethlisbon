@@ -62,6 +62,12 @@ module.exports = {
       saveDeployments: true,
       chainId: 100,
     },
+    linea: {
+      url: "https://rpc.goerli.linea.build",
+      accounts: [PRIVATE_KEY],
+      saveDeployments: true,
+      chainId: 59140,
+    },
   },
   etherscan: {
     apiKey: {
@@ -69,6 +75,8 @@ module.exports = {
       polygon: "GRWRVBB9MGTWI599KUSPJNS5ZXW97MA3Z3",
       optimisticEthereum: "9CEXUK2XSCQ48E31P11QAHAIY376YXIHNF",
       gnosis: "X56R4A6ZHP2Y88U68XP6NZ3Q73Y233FD7R",
+      scrollAlphaTestnet: ETHERSCAN_API_KEY,
+      linea: ETHERSCAN_API_KEY,
     },
   },
   gasReporter: {

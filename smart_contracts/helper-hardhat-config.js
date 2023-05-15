@@ -26,6 +26,10 @@ const networkConfig = {
     name: "gnosisChain",
     usdcToken: "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
   },
+  59140: {
+    name: "linea",
+    usdcToken: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  },
   1: {
     name: "mainnet",
   },
