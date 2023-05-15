@@ -4,16 +4,14 @@ Slice is a P2P payment system built on top of Account Abstraction.
 
 The code for this project was created during the ETH Glocal Lisbon 2023 Hackathon.
 
-This project won the Safe prize for best use case of the safe Core SDK.
-
-TODO: INSERT SAFE TWEET
+This project [won the Safe prize](https://twitter.com/safe/status/1657769388215500805?s=46) for best use case of the safe Core SDK.
 
 ## What is Slice ?
 
 With Slice users can transfer money through Ethereum chain using only a credit card and their social account login (no browser extension).
 Think Venmo or Cashapp, but decentralised and borderless.
 
-The tech stack is built with [Safe Core SDK]()
+The tech stack is built with [Safe Core SDK](https://docs.safe.global/learn/safe-core/safe-core-account-abstraction-sdk)
 
 • Authentication : Web3auth
 • Smart Account Wallet : Safe
@@ -22,7 +20,7 @@ The tech stack is built with [Safe Core SDK]()
 
 ## Demo
 
-[Click here]() for the demo
+[Click here](https://ethlisbon-vdaubry.vercel.app/) for the demo
 
 ## Account Abstraction
 
